@@ -16,21 +16,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jane Doe | Full-Stack Software Engineer & 3D Web Developer",
-  description: "A showcase of high-performance web applications, developer tooling, and interactive 3D experiences engineered with Next.js, Framer Motion, and Sanity.io.",
+  title: "Ali Abu Fadaleh | Portfolio",
+  description: "Computer Science Graduate & Enterprise Systems Specialist",
   keywords: ["Software Engineer", "Developer Portfolio", "Next.js", "Three.js", "React Three Fiber", "Web Development", "TypeScript", "Framer Motion"],
-  authors: [{ name: "Jane Doe", url: "https://github.com/octocat" }],
+  authors: [{ name: "Ali Abu Fadaleh", url: "https://github.com/Ali-Abu-Fadalah" }],
   openGraph: {
-    title: "Jane Doe | Full-Stack Software Engineer & 3D Web Developer",
-    description: "A showcase of high-performance web applications, developer tooling, and interactive 3D experiences engineered with Next.js, Framer Motion, and Sanity.io.",
-    url: "https://example.com",
-    siteName: "Jane Doe Portfolio",
+    title: "Ali Abu Fadaleh | Portfolio",
+    description: "Computer Science Graduate & Enterprise Systems Specialist",
+    url: "https://github.com/Ali-Abu-Fadalah/MyPortfolio",
+    siteName: "Ali Abu Fadaleh Portfolio",
     images: [
       {
-        url: "https://example.com/og-image.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Jane Doe | Full-Stack Software Engineer & 3D Web Developer Portfolio Card",
+        alt: "Ali Abu Fadaleh | Portfolio Card",
       },
     ],
     locale: "en_US",
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jane Doe | Full-Stack Software Engineer & 3D Web Developer",
-    description: "A showcase of high-performance web applications, developer tooling, and interactive 3D experiences engineered with Next.js, Framer Motion, and Sanity.io.",
-    images: ["https://example.com/og-image.png"],
+    title: "Ali Abu Fadaleh | Portfolio",
+    description: "Computer Science Graduate & Enterprise Systems Specialist",
+    images: ["/og-image.png"],
   },
 };
 
