@@ -61,7 +61,7 @@ export function TechStack({ skills }: TechStackProps) {
   };
 
   return (
-    <section id="skills" className="relative py-24 px-6 md:px-12 bg-zinc-50/50 dark:bg-zinc-950/50 border-t border-zinc-200/50 dark:border-zinc-900 transition-colors duration-300">
+    <section id="skills" className="relative py-16 md:py-24 px-4 sm:px-6 md:px-12 bg-zinc-50/50 dark:bg-zinc-950/50 border-t border-zinc-200/50 dark:border-zinc-900 transition-colors duration-300">
       {/* Decorative gradient background elements */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-blue-500/5 dark:bg-blue-900/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[350px] h-[350px] rounded-full bg-indigo-500/5 dark:bg-indigo-900/10 blur-[100px] pointer-events-none" />
@@ -99,7 +99,7 @@ export function TechStack({ skills }: TechStackProps) {
             <motion.div
               key={category}
               variants={cardVariants}
-              className="relative p-6 sm:p-8 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-250 dark:border-zinc-800/80 backdrop-blur-md overflow-hidden group hover:border-zinc-350 dark:hover:border-zinc-700/60 hover:shadow-md transition-all duration-300"
+              className="relative p-5 sm:p-8 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-250 dark:border-zinc-800/80 backdrop-blur-md overflow-hidden group hover:border-zinc-350 dark:hover:border-zinc-700/60 hover:shadow-md transition-all duration-300"
             >
               {/* Highlight background light overlay */}
               <div className="absolute inset-0 bg-gradient-to-b from-zinc-200/10 dark:from-zinc-800/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />

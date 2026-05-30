@@ -10,9 +10,10 @@ import { Profile } from '@/lib/sanity';
 
 interface AbstractShapeProps {
   theme: string;
+  isMobile: boolean;
 }
 
-function AbstractShape({ theme }: AbstractShapeProps) {
+function AbstractShape({ theme, isMobile }: AbstractShapeProps) {
   const meshRef = useRef<THREE.Mesh>(null);
 
   // Auto rotate and track pointer using linear interpolation (lerp)
@@ -23,8 +24,9 @@ function AbstractShape({ theme }: AbstractShapeProps) {
       meshRef.current.rotation.x += 0.002;
       
       // 2. Smoothly interpolate position based on pointer x/y to follow cursor
-      const targetX = state.pointer.x * 2.0;
-      const targetY = state.pointer.y * 1.5;
+      // Scale down movement range on mobile to prevent canvas edge clipping
+      const targetX = state.pointer.x * (isMobile ? 1.0 : 2.0);
+      const targetY = state.pointer.y * (isMobile ? 0.8 : 1.5);
       
       meshRef.current.position.x = THREE.MathUtils.lerp(
         meshRef.current.position.x,
@@ -47,7 +49,8 @@ function AbstractShape({ theme }: AbstractShapeProps) {
 
   return (
     <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
-      <Icosahedron ref={meshRef} args={[1, 1]} scale={2.5}>
+      {/* Dynamic scale based on mobile viewport */}
+      <Icosahedron ref={meshRef} args={[1, 1]} scale={isMobile ? 1.4 : 2.5}>
         <meshStandardMaterial 
           color={meshColor} 
           wireframe 
@@ -68,9 +71,16 @@ interface HeroSectionProps {
 export function HeroSection({ profile }: HeroSectionProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const activeTheme = mounted ? (resolvedTheme || 'dark') : 'dark';
@@ -83,7 +93,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
         <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
           <ambientLight intensity={activeTheme === 'dark' ? 0.5 : 0.8} />
           <directionalLight position={[10, 10, 5]} intensity={activeTheme === 'dark' ? 1.0 : 1.2} />
-          <AbstractShape theme={activeTheme} />
+          <AbstractShape theme={activeTheme} isMobile={isMobile} />
           <Environment preset="city" />
           <ContactShadows position={[0, -3, 0]} opacity={activeTheme === 'dark' ? 0.4 : 0.2} scale={20} blur={2} far={4.5} />
         </Canvas>
@@ -97,27 +107,27 @@ export function HeroSection({ profile }: HeroSectionProps) {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
-        className="relative z-20 flex flex-col items-center text-center px-6 max-w-4xl mx-auto space-y-6 pointer-events-none"
+        className="relative z-20 flex flex-col items-center text-center px-4 sm:px-6 max-w-4xl mx-auto space-y-6 pointer-events-none"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-200/80 border border-zinc-300/85 text-sm font-medium text-zinc-800 dark:bg-zinc-900/80 dark:border-zinc-800 dark:text-zinc-300 backdrop-blur-md shadow-md transition-colors"
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-200/80 border border-zinc-300/85 text-xs sm:text-sm font-medium text-zinc-800 dark:bg-zinc-900/80 dark:border-zinc-800 dark:text-zinc-300 backdrop-blur-md shadow-md transition-colors"
         >
           <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-500 animate-pulse" />
           Available for work
         </motion.div>
         
-        <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl bg-clip-text bg-gradient-to-b from-zinc-900 to-zinc-600 text-transparent dark:from-white dark:to-zinc-400">
+        <h1 className="text-4xl font-extrabold tracking-tight sm:text-7xl bg-clip-text bg-gradient-to-b from-zinc-900 to-zinc-600 text-transparent dark:from-white dark:to-zinc-400">
           {profile.name}
         </h1>
         
-        <p className="text-xl sm:text-2xl text-blue-600 dark:text-blue-400 font-medium tracking-wide">
+        <p className="text-lg sm:text-2xl text-blue-600 dark:text-blue-400 font-medium tracking-wide">
           {profile.specialty}
         </p>
 
-        <p className="text-base text-zinc-600 dark:text-zinc-400 sm:text-lg max-w-2xl leading-relaxed mt-4">
+        <p className="text-sm sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed mt-4">
           {profile.bio}
         </p>
 

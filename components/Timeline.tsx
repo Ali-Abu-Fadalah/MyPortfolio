@@ -38,7 +38,7 @@ export function Timeline({ experiences }: TimelineProps) {
   };
 
   return (
-    <section id="experience" className="relative py-24 px-6 md:px-12 bg-zinc-50/30 dark:bg-zinc-950/30 border-t border-zinc-200/50 dark:border-zinc-900 transition-colors duration-300">
+    <section id="experience" className="relative py-16 md:py-24 px-4 sm:px-6 md:px-12 bg-zinc-50/30 dark:bg-zinc-950/30 border-t border-zinc-200/50 dark:border-zinc-900 transition-colors duration-300">
       <div className="max-w-4xl mx-auto relative z-10">
         
         {/* Header */}
@@ -64,7 +64,7 @@ export function Timeline({ experiences }: TimelineProps) {
         </div>
 
         {/* Timeline body */}
-        <div className="relative pl-6 md:pl-8 border-l border-zinc-250 dark:border-zinc-800/80 space-y-12 ml-4">
+        <div className="relative pl-6 md:pl-8 border-l border-zinc-250 dark:border-zinc-800/80 space-y-12 ml-2 sm:ml-4">
           
           <motion.div
             variants={containerVariants}
@@ -91,7 +91,7 @@ export function Timeline({ experiences }: TimelineProps) {
                   />
 
                   {/* Glassmorphic Item Card */}
-                  <div className="p-6 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80 backdrop-blur-md hover:border-zinc-300 dark:hover:border-zinc-700/60 shadow-sm hover:shadow-md transition-all duration-300">
+                  <div className="p-5 sm:p-6 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80 backdrop-blur-md hover:border-zinc-300 dark:hover:border-zinc-700/60 shadow-sm hover:shadow-md transition-all duration-300">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                       <div>
                         {/* Role / Degree */}

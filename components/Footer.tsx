@@ -8,7 +8,7 @@ interface FooterProps {
 
 export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
   return (
-    <footer id="contact" className="relative py-20 px-6 md:px-12 bg-zinc-100 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900 transition-colors duration-300">
+    <footer id="contact" className="relative py-16 md:py-20 px-4 sm:px-6 md:px-12 bg-zinc-100 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900 transition-colors duration-300">
       {/* Decorative gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-200/20 dark:to-black/30 pointer-events-none" />
 

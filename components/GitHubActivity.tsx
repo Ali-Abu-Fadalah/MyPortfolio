@@ -112,7 +112,7 @@ export async function GitHubActivity({ githubUsername }: GitHubActivityProps) {
   }
 
   return (
-    <section id="github" className="relative py-24 px-6 md:px-12 bg-zinc-50/20 dark:bg-zinc-950/20 border-t border-zinc-200 dark:border-zinc-900 transition-colors duration-300">
+    <section id="github" className="relative py-16 md:py-24 px-4 sm:px-6 md:px-12 bg-zinc-50/20 dark:bg-zinc-950/20 border-t border-zinc-200 dark:border-zinc-900 transition-colors duration-300">
       <div className="max-w-6xl mx-auto relative z-10">
         
         {/* Header */}
@@ -156,7 +156,7 @@ export async function GitHubActivity({ githubUsername }: GitHubActivityProps) {
               href={repo.html_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex flex-col justify-between p-6 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80 hover:border-blue-300 dark:hover:border-blue-500/30 hover:bg-white dark:hover:bg-zinc-900/70 hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(59,130,246,0.04)] dark:hover:shadow-[0_12px_30px_rgba(59,130,246,0.08)] transition-all duration-300 backdrop-blur-md shadow-sm hover:shadow-md"
+              className="group relative flex flex-col justify-between p-5 sm:p-6 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80 hover:border-blue-300 dark:hover:border-blue-500/30 hover:bg-white dark:hover:bg-zinc-900/70 hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(59,130,246,0.04)] dark:hover:shadow-[0_12px_30px_rgba(59,130,246,0.08)] transition-all duration-300 backdrop-blur-md shadow-sm hover:shadow-md"
             >
               {/* Header inside card */}
               <div>
