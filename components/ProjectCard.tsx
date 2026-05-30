@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { PortfolioProject } from '@/lib/sanity';
+import { Magnetic } from './Magnetic';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 35 },
@@ -18,12 +19,13 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <motion.div
-      variants={cardVariants}
-      whileHover={{ scale: 1.02, y: -4 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-      className="group relative flex flex-col h-full overflow-hidden rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-gradient-to-b from-white to-zinc-50/50 dark:from-zinc-900/60 dark:to-zinc-950/80 p-5 sm:p-6 shadow-md hover:shadow-lg dark:shadow-2xl backdrop-blur-sm transition-all duration-300 hover:border-zinc-300 dark:hover:border-zinc-700/80 hover:from-white hover:to-zinc-100/50 dark:hover:from-zinc-900/80 dark:hover:to-zinc-950"
-    >
+    <Magnetic range={100} className="h-full">
+      <motion.div
+        variants={cardVariants}
+        whileHover={{ scale: 1.02, y: -4 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+        className="group relative flex flex-col h-full overflow-hidden rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-gradient-to-b from-white to-zinc-50/50 dark:from-zinc-900/60 dark:to-zinc-950/80 p-5 sm:p-6 shadow-md hover:shadow-lg dark:shadow-2xl backdrop-blur-sm transition-all duration-300 hover:border-zinc-300 dark:hover:border-zinc-700/80 hover:from-white hover:to-zinc-100/50 dark:hover:from-zinc-900/80 dark:hover:to-zinc-950"
+      >
       <div className="flex flex-col flex-grow">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-blue-650 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-100 dark:border-blue-500/20">
@@ -81,6 +83,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           )}
         </div>
       </div>
-    </motion.div>
+      </motion.div>
+    </Magnetic>
   );
 }

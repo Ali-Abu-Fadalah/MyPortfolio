@@ -17,7 +17,7 @@ export default async function Home() {
   ]);
 
   return (
-    <main className="flex min-h-screen flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 transition-colors duration-300">
+    <main className="flex min-h-screen flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
       {/* Dynamic Hero Section with 3D Canvas */}
       <HeroSection profile={profile} />
 

@@ -14,6 +14,7 @@ A dynamic, premium developer portfolio engineered with **Next.js (App Router)**,
 *   **Professional Timeline**: Chronological vertical timeline mapping education and work landmarks with scroll-reveal animations and colored dot tags (Work = Blue, Education = Violet).
 *   **Action Footer**: Dynamic contact footer using SVG brands, email routing, and a resume download handler feeding directly from Sanity query bindings.
 *   **Complete SEO & Sharing Card**: Fully structured Next.js Metadata configuration providing OpenGraph card previews, keywords, and author settings for social feeds.
+*   **Magnetic UI Physics**: Responsive spring-physics-based attraction effect on desktop viewports. Mapped via Framer Motion's `useMotionValue`, `useSpring`, and `useTransform` to pull elements (max 15px) towards the cursor, returning to position on cursor release. Disables on screens `< 768px`.
 
 ---
 
@@ -61,7 +62,8 @@ Open [http://localhost:3000](http://localhost:3000) to view the portfolio. Visit
 │   └── page.tsx          # Server Component loading portfolio data
 ├── components/           # UI Elements & Widgets
 │   ├── HeroSection.tsx   # 3D Wireframe Canvas & overlays
-│   ├── ProjectsSection.g # Projects grid container
+│   ├── Magnetic.tsx      # Framer Motion magnetic hover physics wrapper
+│   ├── ProjectsSection.tsx # Projects grid container
 │   ├── ProjectCard.tsx   # Interactive Project grid cards
 │   ├── TechStack.tsx     # Technical Skills list
 │   ├── GitHubActivity.ts # Server-fetched GitHub repositories feed
