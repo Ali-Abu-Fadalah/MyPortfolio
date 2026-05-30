@@ -49,8 +49,7 @@ function AbstractShape({ theme, isMobile }: AbstractShapeProps) {
 
   return (
     <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
-      {/* Dynamic scale based on mobile viewport */}
-      <Icosahedron ref={meshRef} args={[1, 1]} scale={isMobile ? 1.4 : 2.5}>
+      <Icosahedron ref={meshRef} args={[1, 1]} scale={isMobile ? 1.2 : 2.5}>
         <meshStandardMaterial 
           color={meshColor} 
           wireframe 
