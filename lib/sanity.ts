@@ -92,13 +92,13 @@ export interface Profile {
 
 const MOCK_PROFILE: Profile = {
   _id: "mock-profile",
-  name: "Jane Doe",
-  specialty: "Full-Stack Software Engineer & 3D Web Developer",
-  bio: "I build high-performance web applications, developer tooling, and interactive 3D experiences.",
-  githubUsername: "octocat",
-  email: "jane.doe@example.com",
-  linkedinUrl: "https://linkedin.com",
-  copyrightName: "Jane Doe"
+  name: "Ali Abu Fadaleh",
+  specialty: "Enterprise Systems Specialist",
+  bio: "Computer Science Graduate & Enterprise Systems Specialist. I build high-performance web applications, developer tooling, and interactive 3D experiences.",
+  githubUsername: "Ali-Abu-Fadalah",
+  email: "ali.abufadalah@gmail.com",
+  linkedinUrl: "https://linkedin.com/in/ali-abu-fadalah",
+  copyrightName: "Ali Abu Fadaleh"
 };
 
 export async function getProfile(): Promise<Profile> {
@@ -225,7 +225,7 @@ const MOCK_EXPERIENCES: Experience[] = [
   },
   {
     _id: 'e3',
-    role: 'Full-Stack Developer',
+    role: 'Enterprise Systems Specialist',
     organization: 'Tech Innovations Lab',
     type: 'Work',
     dateRange: '2023 - 2025',
