@@ -4,7 +4,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { TechGraph } from "@/components/TechGraph";
 import { GitHubTerminal } from "@/components/GitHubTerminal";
 import { Timeline } from "@/components/Timeline";
-import { Footer } from "@/components/Footer";
+import { ContactSection } from "@/components/ContactSection";
 
 export const revalidate = 10;
 
@@ -33,8 +33,8 @@ export default async function Home() {
       {/* Experience and Education Timeline */}
       <Timeline experiences={experiences} />
 
-      {/* Dynamic Action Footer */}
-      <Footer 
+      {/* Interactive Contact Waveform */}
+      <ContactSection 
         email={profile.email}
         linkedinUrl={profile.linkedinUrl}
         copyrightName={profile.copyrightName}

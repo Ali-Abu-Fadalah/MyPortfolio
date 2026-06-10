@@ -27,22 +27,43 @@ function getLorenzPoints(count: number) {
   return points;
 }
 
+// Rössler Attractor CPU calculation
+function getRosslerPoints(count: number) {
+  const points = new Float32Array(count * 3);
+  let x = 0.1, y = 0, z = 0;
+  const a = 0.2, b = 0.2, c = 5.7, dt = 0.04;
+
+  for (let i = 0; i < count; i++) {
+    const dx = (-y - z) * dt;
+    const dy = (x + a * y) * dt;
+    const dz = (b + z * (x - c)) * dt;
+
+    x += dx;
+    y += dy;
+    z += dz;
+
+    points[i * 3] = x;
+    points[i * 3 + 1] = y;
+    points[i * 3 + 2] = z;
+  }
+  return points;
+}
+
 const vertexShader = `
 uniform vec3 uCursorPos;
 uniform float uTime;
 uniform bool uIsMobile;
+uniform bool uIsReducedMotion;
 
 varying float vDistance;
 
 void main() {
   vec3 pos = position;
   
-  // Transform instance position
   vec4 instanceWorld = instanceMatrix * vec4(pos, 1.0);
-  vDistance = 100.0; // Default far distance
+  vDistance = 100.0;
   
-  if (!uIsMobile) {
-    // Repulsion logic
+  if (!uIsMobile && !uIsReducedMotion) {
     float dist = distance(instanceWorld.xyz, uCursorPos);
     vDistance = dist;
     if (dist < 1.5) {
@@ -53,22 +74,24 @@ void main() {
     }
   }
 
-  // Subtle ambient floating
-  instanceWorld.y += sin(uTime * 0.5 + instanceWorld.x) * 0.1;
-  instanceWorld.x += cos(uTime * 0.3 + instanceWorld.y) * 0.05;
+  if (!uIsReducedMotion) {
+    instanceWorld.y += sin(uTime * 0.5 + instanceWorld.x) * 0.1;
+    instanceWorld.x += cos(uTime * 0.3 + instanceWorld.y) * 0.05;
+  }
 
   gl_Position = projectionMatrix * viewMatrix * instanceWorld;
 }
 `;
 
 const fragmentShader = `
+uniform bool uIsRossler;
+
 varying float vDistance;
 
 void main() {
-  vec3 baseColor = vec3(0.024, 0.714, 0.831); // Cyan #06b6d4
-  vec3 accentColor = vec3(0.659, 0.333, 0.969); // Violet #a855f7
+  vec3 baseColor = uIsRossler ? vec3(0.9, 0.1, 0.1) : vec3(0.024, 0.714, 0.831);
+  vec3 accentColor = uIsRossler ? vec3(0.6, 0.0, 0.0) : vec3(0.659, 0.333, 0.969);
   
-  // Slight glow and color variation near cursor
   float intensity = 0.8;
   vec3 color = baseColor;
   
@@ -82,26 +105,33 @@ void main() {
 }
 `;
 
-function Particles({ count, isMobile }: { count: number, isMobile: boolean }) {
+function Particles({ count, isMobile, isRossler, isReducedMotion }: { count: number, isMobile: boolean, isRossler: boolean, isReducedMotion: boolean }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const { camera } = useThree();
   
-  const points = useMemo(() => getLorenzPoints(count), [count]);
+  const points = useMemo(() => isRossler ? getRosslerPoints(count) : getLorenzPoints(count), [count, isRossler]);
   
   const uniforms = useMemo(() => ({
     uCursorPos: { value: new THREE.Vector3(0,0,100) },
     uTime: { value: 0 },
-    uIsMobile: { value: isMobile }
-  }), [isMobile]);
+    uIsMobile: { value: isMobile },
+    uIsRossler: { value: isRossler },
+    uIsReducedMotion: { value: isReducedMotion }
+  }), [isMobile, isRossler, isReducedMotion]);
+
+  useEffect(() => {
+    uniforms.uIsRossler.value = isRossler;
+    uniforms.uIsReducedMotion.value = isReducedMotion;
+  }, [isRossler, isReducedMotion, uniforms]);
 
   useEffect(() => {
     if (!meshRef.current) return;
     const dummy = new THREE.Object3D();
     
-    const scale = 0.15;
-    const offsetX = 0;
-    const offsetY = -4; 
-    const offsetZ = -5;
+    const scale = isRossler ? 0.3 : 0.15;
+    const offsetX = isRossler ? 0 : 0;
+    const offsetY = isRossler ? -2 : -4; 
+    const offsetZ = isRossler ? -10 : -5;
     
     for (let i = 0; i < count; i++) {
       dummy.position.set(
@@ -113,29 +143,29 @@ function Particles({ count, isMobile }: { count: number, isMobile: boolean }) {
       meshRef.current.setMatrixAt(i, dummy.matrix);
     }
     meshRef.current.instanceMatrix.needsUpdate = true;
-  }, [points, count]);
+  }, [points, count, isRossler]);
 
   const vec = new THREE.Vector3();
   useFrame((state) => {
     if (!meshRef.current) return;
-    uniforms.uTime.value = state.clock.elapsedTime;
-
-    if (!isMobile) {
-      // Find intersection of cursor ray with z=0 plane
-      vec.set(state.pointer.x, state.pointer.y, 0.5);
-      vec.unproject(state.camera);
-      vec.sub(state.camera.position).normalize();
-      
-      // Calculate intersection distance
-      const distance = (0 - state.camera.position.z) / vec.z;
-      const targetPos = state.camera.position.clone().add(vec.multiplyScalar(distance));
-      
-      uniforms.uCursorPos.value.lerp(targetPos, 0.1);
-    }
     
-    // Rotate the entire system slowly
-    meshRef.current.rotation.y += 0.001;
-    meshRef.current.rotation.x += 0.0005;
+    if (!isReducedMotion) {
+      uniforms.uTime.value = state.clock.elapsedTime;
+      
+      meshRef.current.rotation.y += 0.001;
+      meshRef.current.rotation.x += 0.0005;
+
+      if (!isMobile) {
+        vec.set(state.pointer.x, state.pointer.y, 0.5);
+        vec.unproject(state.camera);
+        vec.sub(state.camera.position).normalize();
+        
+        const distance = (0 - state.camera.position.z) / vec.z;
+        const targetPos = state.camera.position.clone().add(vec.multiplyScalar(distance));
+        
+        uniforms.uCursorPos.value.lerp(targetPos, 0.1);
+      }
+    }
   });
 
   return (
@@ -157,13 +187,43 @@ function Particles({ count, isMobile }: { count: number, isMobile: boolean }) {
 export default function LorenzScene() {
   const [isMobile, setIsMobile] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [isRossler, setIsRossler] = useState(false);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     setMounted(true);
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setIsReducedMotion(mediaQuery.matches);
+    const motionHandler = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', motionHandler);
+
+    // Konami code listener
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let konamiIndex = 0;
+    
+    const keyHandler = (e: KeyboardEvent) => {
+      if (e.key === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          setIsRossler(prev => !prev);
+          konamiIndex = 0;
+        }
+      } else {
+        konamiIndex = 0;
+      }
+    };
+    
+    window.addEventListener('keydown', keyHandler);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      mediaQuery.removeEventListener('change', motionHandler);
+      window.removeEventListener('keydown', keyHandler);
+    };
   }, []);
 
   if (!mounted) return null;
@@ -173,10 +233,12 @@ export default function LorenzScene() {
   return (
     <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
       <Canvas camera={{ position: [0, 0, 10], fov: 45 }} dpr={[1, 1.5]}>
-        <Particles count={particleCount} isMobile={isMobile} />
-        <EffectComposer>
-          <Bloom luminanceThreshold={0.2} intensity={0.8} mipmapBlur />
-        </EffectComposer>
+        <Particles count={particleCount} isMobile={isMobile} isRossler={isRossler} isReducedMotion={isReducedMotion} />
+        {!isReducedMotion && (
+          <EffectComposer>
+            <Bloom luminanceThreshold={0.2} intensity={0.8} mipmapBlur />
+          </EffectComposer>
+        )}
       </Canvas>
     </div>
   );

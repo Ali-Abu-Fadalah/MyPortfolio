@@ -29,6 +29,15 @@ export function Timeline({ experiences }: TimelineProps) {
 
   const sectionRef = useRef<HTMLElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+  const [isReducedMotion, setIsReducedMotion] = React.useState(false);
+
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setIsReducedMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
 
   useGSAP(() => {
     if (!pathRef.current || !sectionRef.current) return;
@@ -36,39 +45,47 @@ export function Timeline({ experiences }: TimelineProps) {
     const path = pathRef.current;
     const length = path.getTotalLength();
     
-    // Set initial dash offset to hide the line
-    gsap.set(path, {
-      strokeDasharray: length,
-      strokeDashoffset: length
-    });
+    if (isReducedMotion) {
+      gsap.set(path, { strokeDasharray: 'none', strokeDashoffset: 0 });
+    } else {
+      // Set initial dash offset to hide the line
+      gsap.set(path, {
+        strokeDasharray: length,
+        strokeDashoffset: length
+      });
 
-    // Draw the line as we scroll
-    gsap.to(path, {
-      strokeDashoffset: 0,
-      ease: "none",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top center",
-        end: "bottom 80%",
-        scrub: 1.5,
-      }
-    });
+      // Draw the line as we scroll
+      gsap.to(path, {
+        strokeDashoffset: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top center",
+          end: "bottom 80%",
+          scrub: 1.5,
+        }
+      });
+    }
 
     // Animate the row entries
     gsap.utils.toArray('.timeline-row').forEach((row: any) => {
-      gsap.from(row, {
-        opacity: 0,
-        x: 30,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: row,
-          start: "top 85%",
-        }
-      });
+      if (isReducedMotion) {
+        gsap.set(row, { opacity: 1, x: 0 });
+      } else {
+        gsap.from(row, {
+          opacity: 0,
+          x: 30,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: row,
+            start: "top 85%",
+          }
+        });
+      }
     });
 
-  }, { scope: sectionRef });
+  }, { scope: sectionRef, dependencies: [isReducedMotion] });
 
   const generateCurve = (itemCount: number) => {
     const rowHeight = 250;
