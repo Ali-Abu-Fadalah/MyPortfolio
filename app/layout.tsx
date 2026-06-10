@@ -5,6 +5,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Providers } from "@/components/providers";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
+import { LoadOrchestrator } from "@/components/LoadOrchestrator";
 
 const BackgroundShader = dynamic(() => import("@/components/BackgroundShader"), {
   ssr: false,
@@ -62,6 +63,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-transparent text-zinc-900 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
         <Providers>
+          <LoadOrchestrator />
           <BackgroundShader />
           <ScrollProgressBar />
           <Navbar />
