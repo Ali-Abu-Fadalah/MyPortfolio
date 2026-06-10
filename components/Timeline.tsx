@@ -1,134 +1,169 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Experience } from '@/lib/sanity';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface TimelineProps {
   experiences: Experience[];
 }
 
+const MATH_ANNOTATIONS = [
+  "f(x) = Σ aₙcos(nx) + bₙsin(nx)",
+  "∇ × E = -∂B/∂t",
+  "e^(iπ) + 1 = 0",
+  "F = G(m₁m₂)/r²",
+  "∮ B·dl = μ₀I",
+  "E = mc²",
+  "iħ(∂Ψ/∂t) = HΨ"
+];
+
 export function Timeline({ experiences }: TimelineProps) {
-  // Sort experiences chronologically (latest first or earliest first - typically latest first is preferred in CVs, but user asked for chronological)
-  // Let's sort with latest first to match professional standards, or sorted by dateRange/createdAt.
   const sortedExperiences = [...experiences].sort((a, b) => {
     return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime();
   });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
+  const sectionRef = useRef<HTMLElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+
+  useGSAP(() => {
+    if (!pathRef.current || !sectionRef.current) return;
+    
+    const path = pathRef.current;
+    const length = path.getTotalLength();
+    
+    // Set initial dash offset to hide the line
+    gsap.set(path, {
+      strokeDasharray: length,
+      strokeDashoffset: length
+    });
+
+    // Draw the line as we scroll
+    gsap.to(path, {
+      strokeDashoffset: 0,
+      ease: "none",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top center",
+        end: "bottom 80%",
+        scrub: 1.5,
+      }
+    });
+
+    // Animate the row entries
+    gsap.utils.toArray('.timeline-row').forEach((row: any) => {
+      gsap.from(row, {
+        opacity: 0,
+        x: 30,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: row,
+          start: "top 85%",
+        }
+      });
+    });
+
+  }, { scope: sectionRef });
+
+  const generateCurve = (itemCount: number) => {
+    const rowHeight = 250;
+    let d = `M 20 0 `;
+    let y = 0;
+    let x = 20;
+    for(let i = 0; i < itemCount; i++) {
+      const nextY = y + rowHeight;
+      const nextX = x === 20 ? 80 : 20;
+      // Cubic bezier to curve back and forth
+      d += `C ${x} ${y + rowHeight/2}, ${nextX} ${nextY - rowHeight/2}, ${nextX} ${nextY} `;
+      y = nextY;
+      x = nextX;
+    }
+    return d;
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        type: 'spring' as const,
-        stiffness: 100,
-        damping: 15,
-      },
-    },
-  };
+  const dynamicPath = generateCurve(sortedExperiences.length + 1);
 
   return (
-    <section id="experience" className="relative py-16 md:py-24 px-4 sm:px-6 md:px-12 bg-zinc-50/30 dark:bg-zinc-950/30 border-t border-zinc-200/50 dark:border-zinc-900 transition-colors duration-300">
-      <div className="max-w-4xl mx-auto relative z-10">
+    <section ref={sectionRef} id="experience" className="relative py-24 px-4 sm:px-6 md:px-12 bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200/50 dark:border-zinc-900 transition-colors duration-300 overflow-hidden font-sans">
+      
+      <div className="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row gap-8 lg:gap-16">
         
-        {/* Header */}
-        <div className="text-center mb-20">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl font-bold tracking-tight sm:text-4xl bg-clip-text bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-650 dark:from-white dark:via-zinc-200 dark:to-zinc-400 text-transparent"
-          >
-            Professional Journey
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mt-4 text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto text-base sm:text-lg"
-          >
-            A timeline of my professional work engagements, roles, and educational landmarks.
-          </motion.p>
+        {/* Left Side: Header and SVG Curve */}
+        <div className="md:w-1/3 relative flex-shrink-0">
+          <div className="sticky top-32">
+            <h2 className="text-4xl font-extrabold tracking-tight bg-clip-text bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-600 dark:from-white dark:via-zinc-200 dark:to-zinc-400 text-transparent mb-6">
+              Timeline Integration
+            </h2>
+            <p className="text-zinc-600 dark:text-zinc-400">
+              Tracing professional and educational evolution over the continuum.
+            </p>
+          </div>
+
+          {/* SVG S-Curve */}
+          <div className="hidden md:block absolute top-48 left-8 bottom-0 w-[100px] pointer-events-none z-0 overflow-visible" style={{ minHeight: '1000px' }}>
+            <svg width="100%" height="100%" className="overflow-visible" fill="none">
+              {/* Faint dashed track behind the solid line */}
+              <path
+                d={dynamicPath}
+                strokeWidth="2"
+                strokeDasharray="4 8"
+                strokeLinecap="round"
+                className="stroke-zinc-300 dark:stroke-zinc-800"
+              />
+              {/* Animated solid line */}
+              <path
+                ref={pathRef}
+                d={dynamicPath}
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                className="stroke-zinc-800 dark:stroke-zinc-300"
+              />
+            </svg>
+          </div>
         </div>
 
-        {/* Timeline body */}
-        <div className="relative pl-6 md:pl-8 border-l border-zinc-250 dark:border-zinc-800/80 space-y-12 ml-2 sm:ml-4">
-          
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-            className="space-y-12"
-          >
-            {sortedExperiences.map((exp, index) => {
-              const isWork = exp.type === 'Work';
-              
-              return (
-                <motion.div
-                  key={exp._id}
-                  variants={itemVariants}
-                  className="relative group"
-                >
-                  {/* Timeline Bullet Node Dot */}
-                  <span className={`absolute -left-[31px] md:-left-[39px] top-1.5 w-4 h-4 rounded-full border-4 border-zinc-50 dark:border-zinc-950 flex items-center justify-center transition-all duration-300 group-hover:scale-125 shadow-sm
-                    ${isWork 
-                      ? 'bg-blue-600 dark:bg-blue-500 shadow-blue-500/20 group-hover:shadow-blue-500/40' 
-                      : 'bg-violet-600 dark:bg-violet-500 shadow-violet-500/20 group-hover:shadow-violet-500/40'
-                    }`} 
-                  />
+        {/* Right Side: Minimal Text Rows */}
+        <div className="md:w-2/3 space-y-24 mt-16 md:mt-48 relative z-10 pb-32">
+          {sortedExperiences.map((exp, index) => {
+            const annotation = MATH_ANNOTATIONS[index % MATH_ANNOTATIONS.length];
+            return (
+              <div key={exp._id} className="timeline-row relative flex flex-col items-start group">
+                
+                {/* Floating Math Annotation */}
+                <div className="absolute -left-4 -top-8 md:-left-24 md:-top-6 text-zinc-300 dark:text-zinc-800 font-mono text-[11px] select-none transform -rotate-6 md:-rotate-12 opacity-40 group-hover:opacity-80 transition-opacity duration-500 whitespace-nowrap">
+                  {annotation}
+                </div>
 
-                  {/* Glassmorphic Item Card */}
-                  <div className="p-5 sm:p-6 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80 backdrop-blur-md hover:border-zinc-300 dark:hover:border-zinc-700/60 shadow-sm hover:shadow-md transition-all duration-300">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-                      <div>
-                        {/* Role / Degree */}
-                        <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors duration-200">
-                          {exp.role}
-                        </h3>
-                        {/* Company / Institution */}
-                        <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mt-0.5">
-                          {exp.organization}
-                        </p>
-                      </div>
-                      
-                      {/* Date Range & Type Badge Container */}
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 border border-zinc-200/50 dark:border-zinc-700/30">
-                          {exp.dateRange}
-                        </span>
-                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border
-                          ${isWork 
-                            ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-500/15 border-blue-100 dark:border-blue-500/20' 
-                            : 'text-violet-600 dark:text-violet-400 bg-violet-50/50 dark:bg-violet-500/15 border-violet-100 dark:border-violet-500/20'
-                          }`}
-                        >
-                          {exp.type}
-                        </span>
-                      </div>
-                    </div>
+                <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 w-full mb-3">
+                  <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                    {exp.role}
+                  </h3>
+                  <span className="text-zinc-300 dark:text-zinc-700 font-mono text-sm hidden sm:block">/</span>
+                  <p className="text-lg text-zinc-600 dark:text-zinc-400 font-medium">
+                    {exp.organization}
+                  </p>
+                </div>
 
-                    {/* Description */}
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                      {exp.description}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+                <div className="flex items-center gap-4 mb-5 font-mono text-xs sm:text-sm">
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    [{exp.dateRange}]
+                  </span>
+                  <span className="text-zinc-500 uppercase tracking-widest text-[10px]">
+                    :: {exp.type}
+                  </span>
+                </div>
+
+                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl font-serif text-base sm:text-lg">
+                  {exp.description}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
