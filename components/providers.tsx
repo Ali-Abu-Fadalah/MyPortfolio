@@ -1,9 +1,14 @@
 'use client';
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { LenisProvider } from '@/app/providers/LenisProvider';
 import { CursorProvider } from '@/app/providers/CursorProvider';
+
+const BackgroundShader = dynamic(() => import('@/components/BackgroundShader'), {
+  ssr: false,
+});
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -14,6 +19,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     >
       <LenisProvider>
         <CursorProvider>
+          <BackgroundShader />
           {children}
         </CursorProvider>
       </LenisProvider>
