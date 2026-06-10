@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/nav/Navbar";
+import { Navbar } from "@/components/Navbar";
+
 import { Providers } from "@/components/providers";
-import { LenisProvider } from "@/app/providers/LenisProvider";
-import { CursorProvider } from "@/app/providers/CursorProvider";
-import { CustomCursor } from "@/components/ui/CustomCursor";
-import { ScrollProgressBar } from "@/components/ui/ScrollProgressBar";
-import { LoadOrchestrator } from "@/app/providers/LoadOrchestrator";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,17 +55,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors duration-300 overflow-x-hidden">
+      <body className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
         <Providers>
-          <LenisProvider>
-            <CursorProvider>
-              <LoadOrchestrator />
-              <CustomCursor />
-              <ScrollProgressBar />
-              <Navbar />
-              {children}
-            </CursorProvider>
-          </LenisProvider>
+          <Navbar />
+          {children}
         </Providers>
       </body>
     </html>
