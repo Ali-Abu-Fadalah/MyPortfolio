@@ -114,7 +114,7 @@ export async function GitHubActivity({ githubUsername }: GitHubActivityProps) {
   return (
     <section id="github" className="relative py-16 md:py-24 px-4 sm:px-6 md:px-12 bg-zinc-50/20 dark:bg-zinc-950/20 border-t border-zinc-200 dark:border-zinc-900 transition-colors duration-300">
       <div className="max-w-6xl mx-auto relative z-10">
-
+        
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
           <div>
@@ -122,14 +122,14 @@ export async function GitHubActivity({ githubUsername }: GitHubActivityProps) {
               <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
               {isLive ? 'Live GitHub Sync' : 'Featured Repositories'}
             </div>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl bg-clip-text bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-600 dark:from-white dark:via-zinc-200 dark:to-zinc-400 text-transparent">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl bg-clip-text bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-650 dark:from-white dark:via-zinc-200 dark:to-zinc-400 text-transparent">
               Latest Code Activity
             </h2>
             <p className="mt-4 text-zinc-600 dark:text-zinc-400 max-w-xl text-base sm:text-lg">
               Recent open-source creations and contributions fetched live from my GitHub workspace.
             </p>
           </div>
-
+          
           <a
             href={`https://github.com/${githubUsername}`}
             target="_blank"
@@ -167,7 +167,7 @@ export async function GitHubActivity({ githubUsername }: GitHubActivityProps) {
                       <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.53 1.03 1.53 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
                     </svg>
                   </div>
-
+                  
                   {/* Hover Up Right Arrow */}
                   <svg
                     className="w-4 h-4 text-zinc-400 dark:text-zinc-500 group-hover:text-blue-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"
@@ -182,7 +182,7 @@ export async function GitHubActivity({ githubUsername }: GitHubActivityProps) {
                 <h3 className="text-lg font-bold text-zinc-850 group-hover:text-blue-600 dark:text-zinc-100 dark:group-hover:text-blue-400 transition-colors mb-2 truncate">
                   {repo.name}
                 </h3>
-
+                
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-3 mb-6 leading-relaxed">
                   {repo.description || "No description provided. Explore the codebase on GitHub."}
                 </p>
@@ -196,7 +196,7 @@ export async function GitHubActivity({ githubUsername }: GitHubActivityProps) {
                     <span className="text-zinc-600 dark:text-zinc-400">{repo.language}</span>
                   </div>
                 )}
-
+                
                 <div className="flex items-center gap-1 text-zinc-600 dark:text-zinc-400">
                   <svg className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
@@ -211,7 +211,7 @@ export async function GitHubActivity({ githubUsername }: GitHubActivityProps) {
                   <span>{repo.forks_count}</span>
                 </div>
 
-                <span className="ml-auto text-[11px] text-zinc-500 dark:text-zinc-600">
+                <span className="ml-auto text-[11px] text-zinc-500 dark:text-zinc-650">
                   {formatDate(repo.updated_at)}
                 </span>
               </div>

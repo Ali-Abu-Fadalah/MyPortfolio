@@ -68,7 +68,7 @@ export function TechStack({ skills }: TechStackProps) {
 
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16">
-          <motion.h2
+          <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -77,7 +77,7 @@ export function TechStack({ skills }: TechStackProps) {
           >
             Technical Arsenal
           </motion.h2>
-          <motion.p
+          <motion.p 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -88,7 +88,7 @@ export function TechStack({ skills }: TechStackProps) {
           </motion.p>
         </div>
 
-        <motion.div
+        <motion.div 
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -99,11 +99,11 @@ export function TechStack({ skills }: TechStackProps) {
             <motion.div
               key={category}
               variants={cardVariants}
-              className="relative p-5 sm:p-8 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80 backdrop-blur-md overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700/60 hover:shadow-md transition-all duration-300"
+              className="relative p-5 sm:p-8 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-250 dark:border-zinc-800/80 backdrop-blur-md overflow-hidden group hover:border-zinc-350 dark:hover:border-zinc-700/60 hover:shadow-md transition-all duration-300"
             >
               {/* Highlight background light overlay */}
               <div className="absolute inset-0 bg-gradient-to-b from-zinc-200/10 dark:from-zinc-800/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
+              
               <div className="flex items-center gap-3 mb-6">
                 <span className="w-1.5 h-6 rounded-full bg-blue-500" />
                 <h3 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">{category}</h3>

@@ -17,31 +17,27 @@ function AbstractShape({ theme, isMobile }: AbstractShapeProps) {
   const meshRef = useRef<THREE.Mesh>(null);
 
   // Auto rotate and track pointer using linear interpolation (lerp)
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (meshRef.current) {
-      // Limit delta to prevent huge jumps when tab was inactive
-      const clampedDelta = Math.min(delta, 0.1);
-
-      // 1. Auto rotation based on time (frame rate independent)
-      meshRef.current.rotation.y += clampedDelta * 0.2;
-      meshRef.current.rotation.x += clampedDelta * 0.1;
-
+      // 1. Auto rotation
+      meshRef.current.rotation.y += 0.004;
+      meshRef.current.rotation.x += 0.002;
+      
       // 2. Smoothly interpolate position based on pointer x/y to follow cursor
-      if (!isMobile) {
-        const targetX = state.pointer.x * 2.0;
-        const targetY = state.pointer.y * 1.5;
-
-        meshRef.current.position.x = THREE.MathUtils.lerp(
-          meshRef.current.position.x,
-          targetX,
-          0.1
-        );
-        meshRef.current.position.y = THREE.MathUtils.lerp(
-          meshRef.current.position.y,
-          targetY,
-          0.1
-        );
-      }
+      // Scale down movement range on mobile to prevent canvas edge clipping
+      const targetX = state.pointer.x * (isMobile ? 1.0 : 2.0);
+      const targetY = state.pointer.y * (isMobile ? 0.8 : 1.5);
+      
+      meshRef.current.position.x = THREE.MathUtils.lerp(
+        meshRef.current.position.x,
+        targetX,
+        0.05
+      );
+      meshRef.current.position.y = THREE.MathUtils.lerp(
+        meshRef.current.position.y,
+        targetY,
+        0.05
+      );
     }
   });
 
@@ -52,11 +48,11 @@ function AbstractShape({ theme, isMobile }: AbstractShapeProps) {
   const emissiveIntensity = isDark ? 0.6 : 0.25;
 
   return (
-    <Float speed={1.5} rotationIntensity={1} floatIntensity={1}>
-      <Icosahedron ref={meshRef} args={[1, 0]} scale={isMobile ? 1.2 : 2.5}>
-        <meshStandardMaterial
-          color={meshColor}
-          wireframe
+    <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
+      <Icosahedron ref={meshRef} args={[1, 1]} scale={isMobile ? 1.2 : 2.5}>
+        <meshStandardMaterial 
+          color={meshColor} 
+          wireframe 
           transparent
           opacity={isDark ? 0.35 : 0.25}
           emissive={emissiveColor}
@@ -90,38 +86,23 @@ export function HeroSection({ profile }: HeroSectionProps) {
 
   return (
     <section className="relative flex flex-col items-center justify-center min-h-screen w-full bg-zinc-50 dark:bg-zinc-950 overflow-hidden pt-16 transition-colors duration-300">
-
+      
       {/* 3D Canvas Background */}
       <div className="absolute inset-0 z-0 opacity-60 dark:opacity-50">
-        {isMobile ? (
-          // CSS fallback for mobile to save battery and performance
-          <div className="w-full h-full flex items-center justify-center opacity-30">
-            <div className={`w-64 h-64 border-[0.5px] rounded-full flex items-center justify-center
-              ${activeTheme === 'dark' ? 'border-cyan-500/30' : 'border-zinc-500/30'}`}>
-              <div className={`w-48 h-48 border-[0.5px] rounded-full flex items-center justify-center transform rotate-45
-                ${activeTheme === 'dark' ? 'border-cyan-500/40' : 'border-zinc-500/40'}`}>
-                <div className={`w-32 h-32 border-[1px] rounded-full transform -rotate-45
-                  ${activeTheme === 'dark' ? 'border-cyan-500/50' : 'border-zinc-500/50'}`} />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <Canvas
-            camera={{ position: [0, 0, 8], fov: 45 }}
-            dpr={[1, 1.5]}
-          >
-            <ambientLight intensity={activeTheme === 'dark' ? 0.5 : 0.8} />
-            <directionalLight position={[10, 10, 5]} intensity={activeTheme === 'dark' ? 1.0 : 1.2} />
-            <AbstractShape theme={activeTheme} isMobile={isMobile} />
-          </Canvas>
-        )}
+        <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+          <ambientLight intensity={activeTheme === 'dark' ? 0.5 : 0.8} />
+          <directionalLight position={[10, 10, 5]} intensity={activeTheme === 'dark' ? 1.0 : 1.2} />
+          <AbstractShape theme={activeTheme} isMobile={isMobile} />
+          <Environment preset="city" />
+          <ContactShadows position={[0, -3, 0]} opacity={activeTheme === 'dark' ? 0.4 : 0.2} scale={20} blur={2} far={4.5} />
+        </Canvas>
       </div>
 
       {/* Foreground Overlay for readability */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-zinc-50/40 via-zinc-50/80 to-zinc-50 dark:from-zinc-950/40 dark:via-zinc-950/80 dark:to-zinc-950 pointer-events-none transition-colors duration-300" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-zinc-50/20 via-zinc-50/60 to-zinc-50 dark:from-zinc-950/20 dark:via-zinc-950/60 dark:to-zinc-950 pointer-events-none transition-colors duration-300" />
 
       {/* Dynamic Text Overlay */}
-      <motion.div
+      <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
@@ -136,11 +117,11 @@ export function HeroSection({ profile }: HeroSectionProps) {
           <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-500 animate-pulse" />
           Available for work
         </motion.div>
-
+        
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-7xl bg-clip-text bg-gradient-to-b from-zinc-900 to-zinc-600 text-transparent dark:from-white dark:to-zinc-400">
           {profile.name}
         </h1>
-
+        
         <p className="text-lg sm:text-2xl text-blue-600 dark:text-blue-400 font-medium tracking-wide">
           {profile.specialty}
         </p>
@@ -149,10 +130,10 @@ export function HeroSection({ profile }: HeroSectionProps) {
           {profile.bio}
         </p>
 
-        <motion.a
+        <motion.a 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          href="#projects"
+          href="#projects" 
           className="mt-8 px-6 py-3 rounded-full bg-zinc-900 text-zinc-50 dark:bg-white dark:text-zinc-950 font-semibold shadow-lg hover:shadow-xl dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all pointer-events-auto"
         >
           View Projects

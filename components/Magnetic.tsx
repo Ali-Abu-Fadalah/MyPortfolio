@@ -72,7 +72,7 @@ export function Magnetic({ children, range = 60, className = '' }: MagneticProps
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ x: springX, y: springY }}
-      className={`${className} will-change-transform`}
+      className={className}
     >
       {children}
     </motion.div>

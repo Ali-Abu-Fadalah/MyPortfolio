@@ -28,7 +28,7 @@ export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
             <a
               href="/resume.pdf"
               download="resume.pdf"
-              className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold rounded-2xl bg-zinc-900 text-zinc-50 dark:bg-white dark:text-zinc-950 shadow-md hover:shadow-lg hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-all duration-300 active:scale-95"
+              className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold rounded-2xl bg-zinc-900 text-zinc-50 dark:bg-white dark:text-zinc-950 shadow-md hover:shadow-lg hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-all duration-350 active:scale-95"
             >
               <FileText className="w-4 h-4" />
               Download Resume

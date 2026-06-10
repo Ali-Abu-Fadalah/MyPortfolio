@@ -34,7 +34,7 @@ export default async function Home() {
       <Timeline experiences={experiences} />
 
       {/* Dynamic Action Footer */}
-      <Footer
+      <Footer 
         email={profile.email}
         linkedinUrl={profile.linkedinUrl}
         copyrightName={profile.copyrightName}
