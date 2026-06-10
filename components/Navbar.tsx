@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,9 +16,25 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 80);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className="fixed top-0 w-full z-50 border-b border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/85 dark:bg-zinc-950/85 backdrop-blur-md transition-colors duration-300 box-border">
+    <nav 
+      className={`fixed top-0 w-full z-50 transition-all duration-300 box-border ${
+        scrolled 
+          ? 'border-b border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/85 dark:bg-zinc-950/85 backdrop-blur-md'
+          : 'border-b-transparent bg-transparent backdrop-blur-none py-2'
+      }`}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <div className="flex items-center gap-2">
           <Link 

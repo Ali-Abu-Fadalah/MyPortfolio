@@ -3,29 +3,47 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 html {
-  scroll-behavior: smooth;
+  /* Disabled smooth scroll in CSS because we are using Lenis for smooth scrolling */
 }
 
 :root {
-  --background: #fafafa;
+  --bg: #fafafa;
   --foreground: #09090b;
+  --accent-1: #0891b2;
+  --accent-2: #9333ea;
 }
 
 .dark {
-  --background: #09090b;
+  --bg: #09090b;
   --foreground: #fafafa;
+  --accent-1: #06b6d4;
+  --accent-2: #a855f7;
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: var(--bg);
   --color-foreground: var(--foreground);
+  --color-accent-1: var(--accent-1);
+  --color-accent-2: var(--accent-2);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-berkeley: var(--font-berkeley-mono, var(--font-geist-mono));
 }
 
 body {
-  background-color: var(--background);
+  background-color: var(--bg);
   color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Hide default cursor to use custom cursor instead */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a, button, [role="button"], input, select, textarea {
+    cursor: none;
+  }
+}
+

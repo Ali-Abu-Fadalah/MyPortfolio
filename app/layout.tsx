@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import dynamic from "next/dynamic";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
-
 import { Providers } from "@/components/providers";
+import { ScrollProgressBar } from "@/components/ScrollProgressBar";
+
+const BackgroundShader = dynamic(() => import("@/components/BackgroundShader"), {
+  ssr: false,
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -55,8 +60,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
+      <body className="min-h-screen bg-transparent text-zinc-900 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
         <Providers>
+          <BackgroundShader />
+          <ScrollProgressBar />
           <Navbar />
           {children}
         </Providers>
