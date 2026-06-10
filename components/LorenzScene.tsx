@@ -174,7 +174,7 @@ export default function LorenzScene() {
     <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
       <Canvas camera={{ position: [0, 0, 10], fov: 45 }} dpr={[1, 1.5]}>
         <Particles count={particleCount} isMobile={isMobile} />
-        <EffectComposer disableNormalPass>
+        <EffectComposer>
           <Bloom luminanceThreshold={0.2} intensity={0.8} mipmapBlur />
         </EffectComposer>
       </Canvas>
