@@ -1,7 +1,7 @@
 import { getProjects, getProfile, getSkills, getExperiences } from "@/lib/sanity";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { HeroSection } from "@/components/HeroSection";
-import { TechStack } from "@/components/TechStack";
+import { TechGraph } from "@/components/TechGraph";
 import { GitHubActivity } from "@/components/GitHubActivity";
 import { Timeline } from "@/components/Timeline";
 import { Footer } from "@/components/Footer";
@@ -25,7 +25,7 @@ export default async function Home() {
       <ProjectsSection projects={projects} />
 
       {/* Tech Stack Skills Section */}
-      <TechStack skills={skills} />
+      <TechGraph skills={skills} />
 
       {/* GitHub Repository Feed */}
       <GitHubActivity githubUsername={profile.githubUsername} />

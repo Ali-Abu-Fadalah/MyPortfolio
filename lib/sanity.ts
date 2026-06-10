@@ -134,40 +134,41 @@ export interface Skill {
   _id: string;
   title: string;
   category: string;
+  level?: number;
 }
 
 const MOCK_SKILLS: Skill[] = [
   // Frontend
-  { _id: 's1', title: 'React', category: 'Frontend' },
-  { _id: 's2', title: 'Next.js', category: 'Frontend' },
-  { _id: 's3', title: 'TypeScript', category: 'Frontend' },
-  { _id: 's4', title: 'Tailwind CSS', category: 'Frontend' },
-  { _id: 's5', title: 'Three.js / React Three Fiber', category: 'Frontend' },
-  { _id: 's6', title: 'Framer Motion', category: 'Frontend' },
+  { _id: 's1', title: 'React', category: 'Frontend', level: 9 },
+  { _id: 's2', title: 'Next.js', category: 'Frontend', level: 8 },
+  { _id: 's3', title: 'TypeScript', category: 'Frontend', level: 9 },
+  { _id: 's4', title: 'Tailwind CSS', category: 'Frontend', level: 9 },
+  { _id: 's5', title: 'Three.js / React Three Fiber', category: 'Frontend', level: 7 },
+  { _id: 's6', title: 'Framer Motion', category: 'Frontend', level: 8 },
   
   // Backend
-  { _id: 's7', title: 'Node.js', category: 'Backend' },
-  { _id: 's8', title: 'Express', category: 'Backend' },
-  { _id: 's9', title: 'Go', category: 'Backend' },
-  { _id: 's10', title: 'GraphQL', category: 'Backend' },
+  { _id: 's7', title: 'Node.js', category: 'Backend', level: 8 },
+  { _id: 's8', title: 'Express', category: 'Backend', level: 8 },
+  { _id: 's9', title: 'Go', category: 'Backend', level: 6 },
+  { _id: 's10', title: 'GraphQL', category: 'Backend', level: 7 },
   
   // Database
-  { _id: 's11', title: 'PostgreSQL', category: 'Database' },
-  { _id: 's12', title: 'MongoDB', category: 'Database' },
-  { _id: 's13', title: 'Redis', category: 'Database' },
-  { _id: 's14', title: 'Prisma ORM', category: 'Database' },
+  { _id: 's11', title: 'PostgreSQL', category: 'Database', level: 8 },
+  { _id: 's12', title: 'MongoDB', category: 'Database', level: 8 },
+  { _id: 's13', title: 'Redis', category: 'Database', level: 7 },
+  { _id: 's14', title: 'Prisma ORM', category: 'Database', level: 8 },
   
   // DevOps & Tools
-  { _id: 's15', title: 'Docker', category: 'DevOps & Tools' },
-  { _id: 's16', title: 'AWS', category: 'DevOps & Tools' },
-  { _id: 's17', title: 'Git / GitHub', category: 'DevOps & Tools' },
-  { _id: 's18', title: 'Sanity.io', category: 'DevOps & Tools' },
+  { _id: 's15', title: 'Docker', category: 'DevOps & Tools', level: 7 },
+  { _id: 's16', title: 'AWS', category: 'DevOps & Tools', level: 6 },
+  { _id: 's17', title: 'Git / GitHub', category: 'DevOps & Tools', level: 9 },
+  { _id: 's18', title: 'Sanity.io', category: 'DevOps & Tools', level: 7 },
   
   // AI & Machine Learning
-  { _id: 's19', title: 'PyTorch / TensorFlow', category: 'AI & Machine Learning' },
-  { _id: 's20', title: 'LLM Integration (Gemini, OpenAI)', category: 'AI & Machine Learning' },
-  { _id: 's21', title: 'LangChain / LangGraph', category: 'AI & Machine Learning' },
-  { _id: 's22', title: 'Retrieval-Augmented Generation (RAG)', category: 'AI & Machine Learning' }
+  { _id: 's19', title: 'PyTorch / TensorFlow', category: 'AI & Machine Learning', level: 5 },
+  { _id: 's20', title: 'LLM Integration (Gemini, OpenAI)', category: 'AI & Machine Learning', level: 8 },
+  { _id: 's21', title: 'LangChain / LangGraph', category: 'AI & Machine Learning', level: 7 },
+  { _id: 's22', title: 'Retrieval-Augmented Generation (RAG)', category: 'AI & Machine Learning', level: 7 }
 ];
 
 export async function getSkills(): Promise<Skill[]> {
