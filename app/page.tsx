@@ -1,10 +1,12 @@
+import { TabTitle } from "@/components/easter/TabTitle";
+
 import { getProjects, getProfile, getSkills, getExperiences } from "@/lib/sanity";
-import { ProjectsSection } from "@/components/ProjectsSection";
-import { HeroSection } from "@/components/HeroSection";
-import { TechStack } from "@/components/TechStack";
-import { GitHubActivity } from "@/components/GitHubActivity";
-import { Timeline } from "@/components/Timeline";
-import { Footer } from "@/components/Footer";
+import { ProjectsSection } from "@/components/sections/ProjectsSection";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { TechGraph } from "@/components/sections/TechGraph";
+import { GitHubActivity } from "@/components/sections/GitHubActivity";
+import { Timeline } from "@/components/sections/Timeline";
+import { ContactSection } from "@/components/sections/ContactSection";
 
 export const revalidate = 10;
 
@@ -17,7 +19,8 @@ export default async function Home() {
   ]);
 
   return (
-    <main className="flex min-h-screen flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
+    <main className="flex min-h-screen flex-col bg-transparent text-white transition-colors duration-300 overflow-x-hidden">
+      <TabTitle />
       {/* Dynamic Hero Section with 3D Canvas */}
       <HeroSection profile={profile} />
 
@@ -25,7 +28,7 @@ export default async function Home() {
       <ProjectsSection projects={projects} />
 
       {/* Tech Stack Skills Section */}
-      <TechStack skills={skills} />
+      <TechGraph skills={skills} />
 
       {/* GitHub Repository Feed */}
       <GitHubActivity githubUsername={profile.githubUsername} />
@@ -34,7 +37,7 @@ export default async function Home() {
       <Timeline experiences={experiences} />
 
       {/* Dynamic Action Footer */}
-      <Footer 
+      <ContactSection
         email={profile.email}
         linkedinUrl={profile.linkedinUrl}
         copyrightName={profile.copyrightName}

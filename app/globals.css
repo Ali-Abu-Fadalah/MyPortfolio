@@ -3,29 +3,71 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 html {
-  scroll-behavior: smooth;
+  /* Lenis handles smooth scroll */
 }
 
 :root {
-  --background: #fafafa;
-  --foreground: #09090b;
+  --bg: #09090b;
+  --bg-card: #111113;
+  --border: rgba(255,255,255,0.06);
+  --text: #fafafa;
+  --text-2: #a1a1aa;
+  --text-3: #52525b;
+  --accent-1: #06b6d4;
+  --accent-2: #a855f7;
+  --accent-grad: linear-gradient(135deg, #06b6d4, #a855f7);
+  --glow-cyan: 0 0 30px rgba(6,182,212,0.25);
+  --glow-purple: 0 0 30px rgba(168,85,247,0.25);
+
+  --background: var(--bg);
+  --foreground: var(--text);
+}
+
+[data-theme="light"] {
+  --bg: #fafafa;
+  --bg-card: #ffffff;
+  --border: rgba(0,0,0,0.08);
+  --text: #09090b;
+  --text-2: #52525b;
+  --text-3: #a1a1aa;
+  --accent-1: #0891b2;
+  --accent-2: #9333ea;
+  --glow-cyan: 0 0 30px rgba(8,145,178,0.25);
+  --glow-purple: 0 0 30px rgba(147,51,234,0.25);
+
+  --background: var(--bg);
+  --foreground: var(--text);
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
+  --background: var(--bg);
+  --foreground: var(--text);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-berkeley-mono), var(--font-geist-mono);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  cursor: none; /* Custom cursor */
+}
+
+a, button, [role="button"] {
+  cursor: none; /* Custom cursor for interactive elements */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-canvas, .waveform-canvas { animation: none !important; }
+}
+
+::selection {
+  background: var(--accent-1);
+  color: #fff;
 }
