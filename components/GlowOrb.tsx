@@ -18,7 +18,7 @@ export function GlowOrb({
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute rounded-full ${animationClass} ${className}`}
+      className={`pointer-events-none absolute rounded-full orb-blend ${animationClass} ${className}`}
       style={{
         width: size,
         height: size,

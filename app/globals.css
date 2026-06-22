@@ -32,10 +32,10 @@
   --accent-dim:     #4B44CC;
   --accent-bright:  #7B73FF;
   
-  /* Shadows */
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.06);
-  --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
-  --shadow-lg:  0 8px 32px rgba(0,0,0,0.10);
+  /* Shadows - Tinted with Accent for light mode */
+  --shadow-sm:  0 1px 3px rgba(91,82,240,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:  0 4px 16px rgba(91,82,240,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:  0 8px 32px rgba(91,82,240,0.12), 0 4px 8px rgba(0,0,0,0.04);
   --shadow-accent: 0 0 24px rgba(91,82,240,0.25);
   
   /* Radii */
@@ -44,6 +44,16 @@
   --radius-lg: 16px;
   --radius-xl: 24px;
   --radius-2xl:32px;
+
+  /* Code Editor (Light Mode) */
+  --code-bg:        #FFFFFF;
+  --code-header-bg: #F5F5FA;
+  --token-keyword:  #D73A49;
+  --token-variable: #6F42C1;
+  --token-property: #005CC5;
+  --token-string:   #032F62;
+  --token-boolean:  #005CC5;
+  --token-plain:    #24292E;
 }
 
 .dark {
@@ -72,6 +82,16 @@
   --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
   --shadow-lg:  0 8px 32px rgba(0,0,0,0.5);
   --shadow-accent: 0 0 32px rgba(108,99,255,0.3);
+
+  /* Code Editor (Dark Mode) */
+  --code-bg:        #0D0D14;
+  --code-header-bg: #0A0A10;
+  --token-keyword:  #C792EA;
+  --token-variable: #82AAFF;
+  --token-property: #F78C6C;
+  --token-string:   #C3E88D;
+  --token-boolean:  #FF9CAC;
+  --token-plain:    #8888AA;
 }
 
 /* ── Base Reset ───────────────────────────────────────────── */
@@ -188,6 +208,30 @@ body {
   background-size: 128px 128px;
 }
 .dark .noise-overlay { opacity: 0.045; }
+
+/* Blueprint Grid - Light Mode Only */
+.blueprint-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(91,82,240,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(91,82,240,0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+}
+.dark .blueprint-grid {
+  display: none;
+}
+
+/* Glow Orb Blending */
+.orb-blend {
+  mix-blend-mode: multiply;
+}
+.dark .orb-blend {
+  mix-blend-mode: screen;
+}
 
 /* Section gradient divider */
 .section-divider {

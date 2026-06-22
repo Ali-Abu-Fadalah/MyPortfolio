@@ -32,12 +32,12 @@ export function AboutSection({ profile }: { profile: Profile }) {
   ];
 
   const TOKEN_COLORS: Record<string, string> = {
-    keyword: '#C792EA',
-    variable: '#82AAFF',
-    property: '#F78C6C',
-    string: '#C3E88D',
-    boolean: '#FF9CAC',
-    plain: '#8888AA',
+    keyword: 'var(--token-keyword)',
+    variable: 'var(--token-variable)',
+    property: 'var(--token-property)',
+    string: 'var(--token-string)',
+    boolean: 'var(--token-boolean)',
+    plain: 'var(--token-plain)',
   };
 
   const slideLeft = prefersReducedMotion
@@ -163,13 +163,13 @@ export function AboutSection({ profile }: { profile: Profile }) {
           {/* RIGHT — Code card */}
           <motion.div {...slideRight} className="relative">
             <div
-              className="rounded-2xl border overflow-hidden shadow-2xl"
-              style={{ backgroundColor: '#0D0D14', borderColor: 'var(--border)' }}
+              className="rounded-2xl border overflow-hidden shadow-2xl transition-colors duration-300"
+              style={{ backgroundColor: 'var(--code-bg)', borderColor: 'var(--border)' }}
             >
               {/* macOS traffic lights */}
               <div
-                className="flex items-center gap-2 px-5 py-3.5 border-b"
-                style={{ borderColor: 'var(--border)', backgroundColor: '#0A0A10' }}
+                className="flex items-center gap-2 px-5 py-3.5 border-b transition-colors duration-300"
+                style={{ borderColor: 'var(--border)', backgroundColor: 'var(--code-header-bg)' }}
               >
                 <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#FF5F57' }} />
                 <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#FFBD2E' }} />
