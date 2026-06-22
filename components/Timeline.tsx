@@ -1,12 +1,12 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { Experience } from '@/lib/sanity';
+import { Experience, Profile } from '@/lib/sanity';
 import { GlowOrb } from './GlowOrb';
 
 interface TimelineProps {
   experiences: Experience[];
-  nowText?: string;
+  profile: Profile;
 }
 
 function BriefcaseIcon() {
@@ -25,9 +25,9 @@ function GraduationIcon() {
   );
 }
 
-export function Timeline({ experiences, nowText }: TimelineProps) {
+export function Timeline({ experiences, profile }: TimelineProps) {
   const prefersReducedMotion = useReducedMotion();
-  const safeNowText = nowText ?? '— Building & growing';
+  const safeNowText = profile.timelineNowText || '— Building & growing';
 
   const sortedExperiences = [...experiences].sort(
     (a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
@@ -93,7 +93,9 @@ export function Timeline({ experiences, nowText }: TimelineProps) {
           className="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-4"
           style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
         >
-          Professional Journey
+          {(profile.experienceHeadline || "Professional Journey").split(/\*(.*?)\*/g).map((part, i) => 
+            i % 2 === 1 ? <span key={i} style={{ color: 'var(--accent)' }}>{part}</span> : part
+          )}
         </motion.h2>
 
         <motion.p
@@ -108,7 +110,7 @@ export function Timeline({ experiences, nowText }: TimelineProps) {
           className="text-center mb-16 text-sm sm:text-base"
           style={{ color: 'var(--text-secondary)' }}
         >
-          A timeline of my professional roles, projects, and educational milestones.
+          {profile.experienceSubheadline || "A timeline of my professional roles, projects, and educational milestones."}
         </motion.p>
 
         {/* Timeline */}

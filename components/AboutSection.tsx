@@ -98,9 +98,9 @@ export function AboutSection({ profile }: { profile: Profile }) {
               className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 leading-tight"
               style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
             >
-              Turning complex systems into{' '}
-              <span style={{ color: 'var(--accent)' }}>elegant</span>{' '}
-              solutions
+              {(profile.aboutHeadline || "Turning complex systems into *elegant* solutions").split(/\*(.*?)\*/g).map((part, i) => 
+                i % 2 === 1 ? <span key={i} style={{ color: 'var(--accent)' }}>{part}</span> : part
+              )}
             </h2>
 
             {profile.aboutBio?.split('\n').filter(p => p.trim()).map((paragraph, index, arr) => (

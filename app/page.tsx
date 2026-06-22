@@ -25,9 +25,9 @@ export default async function Home() {
       <HeroSection profile={profile} />
       <AboutSection profile={profile} />
       <ProjectsSection projects={projects} />
-      <TechStack skills={skills} categoryOrder={profile.techCategoryOrder} />
+      <TechStack skills={skills} profile={profile} />
       <GitHubActivity githubUsername={profile.githubUsername} />
-      <Timeline experiences={experiences} nowText={profile.timelineNowText} />
+      <Timeline experiences={experiences} profile={profile} />
       <Footer profile={profile} />
     </main>
   );

@@ -100,7 +100,13 @@ export interface Profile {
     location: string;
   };
   aboutStats: { target: number; suffix: string; label: string }[];
-  availabilityText: string;
+  aboutHeadline?: string;
+  techHeadline?: string;
+  techSubheadline?: string;
+  experienceHeadline?: string;
+  experienceSubheadline?: string;
+  footerHeadline?: string;
+  availabilityText?: string;
   timelineNowText: string;
   footerPitch: string;
   footerLocation: string;
@@ -117,6 +123,12 @@ const MOCK_PROFILE: Profile = {
   email: "ali.abufadalah@gmail.com",
   linkedinUrl: "https://linkedin.com/in/ali-abu-fadalah",
   copyrightName: "Ali Abu Fadaleh",
+  aboutHeadline: "Architecting intelligent *AI pipelines* and scalable enterprise solutions",
+  techHeadline: "Tech Stack",
+  techSubheadline: "Languages, frameworks, databases, and tools I build modern software with.",
+  experienceHeadline: "Professional Journey",
+  experienceSubheadline: "A timeline of my professional roles, projects, and educational milestones.",
+  footerHeadline: "Let's build something *great* together.",
   resumeUrl: "/resume.pdf",
   heroRoles: [
     'Enterprise Systems Specialist',
@@ -166,7 +178,7 @@ export async function getProfile(): Promise<Profile> {
   }
 
   try {
-    const query = `*[_type == "profile"][0] {
+    const query = `*[_type == "profile"] {
       _id,
       name,
       specialty,
@@ -179,14 +191,20 @@ export async function getProfile(): Promise<Profile> {
       "resumeUrl": resumeUrl.asset->url,
       heroRoles,
       heroStats,
+      aboutHeadline,
       aboutCodeSnippet,
       aboutStats,
       availabilityText,
+      techHeadline,
+      techSubheadline,
+      techCategoryOrder,
+      experienceHeadline,
+      experienceSubheadline,
       timelineNowText,
+      footerHeadline,
       footerPitch,
-      footerLocation,
-      techCategoryOrder
-    }`;
+      footerLocation
+    }[0]`;
     const data = await client.fetch<Profile>(query);
     return data || MOCK_PROFILE;
   } catch (error) {

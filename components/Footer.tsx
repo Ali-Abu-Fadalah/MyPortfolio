@@ -76,8 +76,9 @@ export function Footer({ profile }: FooterProps) {
           className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight"
           style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
         >
-          Let&apos;s build something{' '}
-          <span style={{ color: 'var(--accent)' }}>great</span>{' '}together.
+          {(profile.footerHeadline || "Let's build something *great* together.").split(/\*(.*?)\*/g).map((part, i) => 
+            i % 2 === 1 ? <span key={i} style={{ color: 'var(--accent)' }}>{part}</span> : part
+          )}
         </motion.h2>
 
         <motion.p

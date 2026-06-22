@@ -1,15 +1,15 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { Skill } from '@/lib/sanity';
+import { Skill, Profile } from '@/lib/sanity';
 import { GlowOrb } from './GlowOrb';
 
 interface TechStackProps {
   skills: Skill[];
-  categoryOrder?: string[];
+  profile: Profile;
 }
 
-export function TechStack({ skills, categoryOrder = [] }: TechStackProps) {
+export function TechStack({ skills, profile }: TechStackProps) {
   const prefersReducedMotion = useReducedMotion();
 
   const groupedSkills = skills.reduce((acc, skill) => {
@@ -18,7 +18,7 @@ export function TechStack({ skills, categoryOrder = [] }: TechStackProps) {
     return acc;
   }, {} as Record<string, Skill[]>);
 
-  const safeCategoryOrder = categoryOrder || [];
+  const safeCategoryOrder = profile.techCategoryOrder || [];
 
   const categoriesToRender = [
     ...safeCategoryOrder.filter((c) => groupedSkills[c]?.length > 0),
@@ -91,7 +91,9 @@ export function TechStack({ skills, categoryOrder = [] }: TechStackProps) {
           className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-center mb-4"
           style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
         >
-          Tech Stack
+          {(profile.techHeadline || "Tech Stack").split(/\*(.*?)\*/g).map((part, i) => 
+            i % 2 === 1 ? <span key={i} style={{ color: 'var(--accent)' }}>{part}</span> : part
+          )}
         </motion.h2>
 
         <motion.p
@@ -106,7 +108,7 @@ export function TechStack({ skills, categoryOrder = [] }: TechStackProps) {
           className="text-center mb-14 max-w-xl mx-auto text-sm sm:text-base"
           style={{ color: 'var(--text-secondary)' }}
         >
-          Languages, frameworks, databases, and tools I build modern software with.
+          {profile.techSubheadline || "Languages, frameworks, databases, and tools I build modern software with."}
         </motion.p>
 
         {/* Category cards */}

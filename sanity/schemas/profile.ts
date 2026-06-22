@@ -79,6 +79,12 @@ export const profile = defineType({
       ],
     }),
     defineField({
+      name: 'aboutHeadline',
+      title: 'About Section Headline',
+      description: 'Use *asterisks* to highlight words (e.g. Turning complex systems into *elegant* solutions)',
+      type: 'string',
+    }),
+    defineField({
       name: 'aboutCodeSnippet',
       title: 'About Section Code Snippet Data',
       type: 'object',
@@ -116,6 +122,12 @@ export const profile = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'footerHeadline',
+      title: 'Footer Headline',
+      description: 'Use *asterisks* to highlight words (e.g. Let\'s build something *great* together.)',
+      type: 'string',
+    }),
+    defineField({
       name: 'footerPitch',
       title: 'Footer Pitch',
       type: 'text',
@@ -126,10 +138,30 @@ export const profile = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'techHeadline',
+      title: 'Tech Stack Headline',
+      type: 'string',
+    }),
+    defineField({
+      name: 'techSubheadline',
+      title: 'Tech Stack Subheadline',
+      type: 'string',
+    }),
+    defineField({
       name: 'techCategoryOrder',
       title: 'Tech Stack Category Order',
       type: 'array',
       of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'experienceHeadline',
+      title: 'Experience Headline',
+      type: 'string',
+    }),
+    defineField({
+      name: 'experienceSubheadline',
+      title: 'Experience Subheadline',
+      type: 'string',
     }),
   ],
 });
