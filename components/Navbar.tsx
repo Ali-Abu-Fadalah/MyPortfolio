@@ -79,8 +79,9 @@ export function Navbar({ resumeUrl = '/resume.pdf' }: { resumeUrl?: string }) {
   }, [isOpen]);
 
   return (
-    <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'border-b' : 'border-b border-transparent'}`}
+    <>
+      <nav
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'border-b' : 'border-b border-transparent'}`}
       style={{
         backgroundColor: scrolled
           ? 'color-mix(in srgb, var(--bg-base) 92%, transparent)'
@@ -209,6 +210,7 @@ export function Navbar({ resumeUrl = '/resume.pdf' }: { resumeUrl?: string }) {
           </button>
         </div>
       </div>
+      </nav>
 
       {/* Mobile full-screen overlay */}
       <AnimatePresence>
@@ -270,6 +272,6 @@ export function Navbar({ resumeUrl = '/resume.pdf' }: { resumeUrl?: string }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 }
