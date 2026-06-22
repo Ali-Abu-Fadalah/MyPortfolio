@@ -19,9 +19,14 @@ export const profile = defineType({
     }),
     defineField({
       name: 'bio',
-      title: 'Bio',
+      title: 'Hero Bio',
       type: 'text',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'aboutBio',
+      title: 'About Section Bio',
+      type: 'text',
     }),
     defineField({
       name: 'githubUsername',

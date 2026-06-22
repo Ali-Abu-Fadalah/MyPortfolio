@@ -103,23 +103,19 @@ export function AboutSection({ profile }: { profile: Profile }) {
               solutions
             </h2>
 
-            <p
-              className="text-base sm:text-lg leading-relaxed mb-6"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              I&apos;m a Computer Science graduate specializing in enterprise-grade web systems,
-              AI integrations, and high-performance frontend experiences. I obsess over the
-              intersection of speed, design, and developer experience.
-            </p>
-
-            <p
-              className="text-sm sm:text-base leading-relaxed mb-10"
-              style={{ color: 'var(--text-muted)' }}
-            >
-              When I&apos;m not building, I&apos;m exploring bleeding-edge tools — from 3D WebGL
-              experiences to multi-agent AI pipelines. I believe great software feels
-              as good as it performs.
-            </p>
+            {profile.aboutBio?.split('\n').filter(p => p.trim()).map((paragraph, index, arr) => (
+              <p
+                key={index}
+                className={`leading-relaxed ${
+                  index === 0 
+                    ? 'text-base sm:text-lg mb-6' 
+                    : `text-sm sm:text-base ${index === arr.length - 1 ? 'mb-10' : 'mb-6'}`
+                }`}
+                style={{ color: index === 0 ? 'var(--text-secondary)' : 'var(--text-muted)' }}
+              >
+                {paragraph}
+              </p>
+            ))}
 
             {/* Stats grid */}
             <div className="grid grid-cols-2 gap-4 mb-8">

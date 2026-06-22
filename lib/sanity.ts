@@ -84,6 +84,7 @@ export interface Profile {
   name: string;
   specialty: string;
   bio: string;
+  aboutBio: string;
   githubUsername: string;
   email: string;
   linkedinUrl: string;
@@ -111,6 +112,7 @@ const MOCK_PROFILE: Profile = {
   name: "Ali Abu Fadaleh",
   specialty: "Enterprise Systems Specialist",
   bio: "Computer Science Graduate & Enterprise Systems Specialist. I build high-performance web applications, developer tooling, and interactive 3D experiences.",
+  aboutBio: "I'm a passionate Computer Science graduate exploring the bleeding edge of AI engineering. I'm constantly seeking to sharpen my skills, whether that's through building multi-agent AI pipelines or high-performance frontend systems. I obsess over the intersection of speed, intelligent design, and developer experience.",
   githubUsername: "Ali-Abu-Fadalah",
   email: "ali.abufadalah@gmail.com",
   linkedinUrl: "https://linkedin.com/in/ali-abu-fadalah",
@@ -169,6 +171,7 @@ export async function getProfile(): Promise<Profile> {
       name,
       specialty,
       bio,
+      aboutBio,
       githubUsername,
       email,
       linkedinUrl,
