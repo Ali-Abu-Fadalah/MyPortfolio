@@ -14,12 +14,7 @@ const ParticleCanvas = dynamic(
   { ssr: false, loading: () => null }
 );
 
-const ROLES = [
-  'Enterprise Systems Specialist',
-  'Full-Stack Engineer',
-  'AI Integration Builder',
-  '3D Web Developer',
-];
+
 
 interface StatItemProps {
   value: string;
@@ -151,7 +146,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
         <motion.p {...fadeUp(0.35)} className="mb-6">
           <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-display)' }}>
             <TypewriterText
-              texts={ROLES}
+              texts={profile.heroRoles && profile.heroRoles.length > 0 ? profile.heroRoles : ['Developer']}
               speed={55}
               pauseDuration={2000}
               className="text-lg sm:text-2xl font-medium"
@@ -174,11 +169,14 @@ export function HeroSection({ profile }: HeroSectionProps) {
           className="flex items-center justify-center gap-8 sm:gap-12 mb-10 py-5 px-8 rounded-2xl border"
           style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border)' }}
         >
-          <StatItem value="3+" label="Years exp." />
-          <div className="w-px h-8" style={{ backgroundColor: 'var(--border)' }} />
-          <StatItem value="20+" label="Projects" />
-          <div className="w-px h-8" style={{ backgroundColor: 'var(--border)' }} />
-          <StatItem value="10+" label="Technologies" />
+          {profile.heroStats?.map((stat, i) => (
+            <div key={i} className="flex items-center gap-8 sm:gap-12">
+              <StatItem value={stat.value} label={stat.label} />
+              {i < profile.heroStats.length - 1 && (
+                <div className="w-px h-8" style={{ backgroundColor: 'var(--border)' }} />
+              )}
+            </div>
+          ))}
         </motion.div>
 
         {/* CTAs */}
@@ -209,7 +207,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
             </svg>
           </a>
           <a
-            href="/resume.pdf"
+            href={profile.resumeUrl || '#'}
             download
             className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold rounded-xl border transition-all duration-200 hover:scale-105"
             style={{

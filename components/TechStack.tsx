@@ -6,17 +6,10 @@ import { GlowOrb } from './GlowOrb';
 
 interface TechStackProps {
   skills: Skill[];
+  categoryOrder?: string[];
 }
 
-const CATEGORY_ORDER = [
-  'Frontend',
-  'Backend',
-  'Database',
-  'DevOps & Tools',
-  'AI & Machine Learning',
-];
-
-export function TechStack({ skills }: TechStackProps) {
+export function TechStack({ skills, categoryOrder = [] }: TechStackProps) {
   const prefersReducedMotion = useReducedMotion();
 
   const groupedSkills = skills.reduce((acc, skill) => {
@@ -25,10 +18,12 @@ export function TechStack({ skills }: TechStackProps) {
     return acc;
   }, {} as Record<string, Skill[]>);
 
+  const safeCategoryOrder = categoryOrder || [];
+
   const categoriesToRender = [
-    ...CATEGORY_ORDER.filter((c) => groupedSkills[c]?.length > 0),
+    ...safeCategoryOrder.filter((c) => groupedSkills[c]?.length > 0),
     ...Object.keys(groupedSkills).filter(
-      (c) => !CATEGORY_ORDER.includes(c) && groupedSkills[c].length > 0
+      (c) => !safeCategoryOrder.includes(c) && groupedSkills[c].length > 0
     ),
   ];
 

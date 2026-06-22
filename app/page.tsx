@@ -23,16 +23,12 @@ export default async function Home() {
       style={{ backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}
     >
       <HeroSection profile={profile} />
-      <AboutSection />
+      <AboutSection profile={profile} />
       <ProjectsSection projects={projects} />
-      <TechStack skills={skills} />
+      <TechStack skills={skills} categoryOrder={profile.techCategoryOrder} />
       <GitHubActivity githubUsername={profile.githubUsername} />
-      <Timeline experiences={experiences} />
-      <Footer
-        email={profile.email}
-        linkedinUrl={profile.linkedinUrl}
-        copyrightName={profile.copyrightName}
-      />
+      <Timeline experiences={experiences} nowText={profile.timelineNowText} />
+      <Footer profile={profile} />
     </main>
   );
 }

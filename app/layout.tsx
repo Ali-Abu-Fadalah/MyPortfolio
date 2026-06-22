@@ -6,6 +6,7 @@ import { Providers } from '@/components/providers';
 import { CustomCursor } from '@/components/CustomCursor';
 import { PageLoader } from '@/components/PageLoader';
 import { ScrollProgress } from '@/components/ScrollProgress';
+import { getProfile } from '@/lib/sanity';
 
 const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk',
@@ -54,7 +55,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const profile = await getProfile();
+  
   return (
     <html
       lang="en"
@@ -66,7 +69,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <PageLoader />
           <ScrollProgress />
           <CustomCursor />
-          <Navbar />
+          <Navbar resumeUrl={profile.resumeUrl} />
           {children}
         </Providers>
       </body>

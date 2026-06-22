@@ -88,6 +88,22 @@ export interface Profile {
   email: string;
   linkedinUrl: string;
   copyrightName: string;
+  resumeUrl: string;
+  heroRoles: string[];
+  heroStats: { value: string; label: string }[];
+  aboutCodeSnippet: {
+    name: string;
+    role: string;
+    focus: string[];
+    available: boolean;
+    location: string;
+  };
+  aboutStats: { target: number; suffix: string; label: string }[];
+  availabilityText: string;
+  timelineNowText: string;
+  footerPitch: string;
+  footerLocation: string;
+  techCategoryOrder: string[];
 }
 
 const MOCK_PROFILE: Profile = {
@@ -98,7 +114,43 @@ const MOCK_PROFILE: Profile = {
   githubUsername: "Ali-Abu-Fadalah",
   email: "ali.abufadalah@gmail.com",
   linkedinUrl: "https://linkedin.com/in/ali-abu-fadalah",
-  copyrightName: "Ali Abu Fadaleh"
+  copyrightName: "Ali Abu Fadaleh",
+  resumeUrl: "/resume.pdf",
+  heroRoles: [
+    'Enterprise Systems Specialist',
+    'Full-Stack Engineer',
+    'AI Integration Builder',
+    '3D Web Developer',
+  ],
+  heroStats: [
+    { value: '3+', label: 'Years exp.' },
+    { value: '20+', label: 'Projects' },
+    { value: '10+', label: 'Technologies' },
+  ],
+  aboutCodeSnippet: {
+    name: 'Ali Abu Fadaleh',
+    role: 'Enterprise Systems Specialist',
+    focus: ['Performance', 'AI Integration', '3D Web', 'Clean Architecture'],
+    available: true,
+    location: 'Available Worldwide',
+  },
+  aboutStats: [
+    { target: 3, suffix: '+', label: 'Years Experience' },
+    { target: 20, suffix: '+', label: 'Projects Shipped' },
+    { target: 10, suffix: '+', label: 'Technologies' },
+    { target: 100, suffix: '+', label: 'GitHub Commits' },
+  ],
+  availabilityText: 'Available for new opportunities',
+  timelineNowText: '— Building & growing',
+  footerPitch: 'Available for full-time roles, contract work, and open-source collaborations. Drop me a message or grab my resume.',
+  footerLocation: 'Available worldwide · Open to relocation',
+  techCategoryOrder: [
+    'Frontend',
+    'Backend',
+    'Database',
+    'DevOps & Tools',
+    'AI & Machine Learning',
+  ],
 };
 
 export async function getProfile(): Promise<Profile> {
@@ -120,7 +172,17 @@ export async function getProfile(): Promise<Profile> {
       githubUsername,
       email,
       linkedinUrl,
-      copyrightName
+      copyrightName,
+      "resumeUrl": resumeUrl.asset->url,
+      heroRoles,
+      heroStats,
+      aboutCodeSnippet,
+      aboutStats,
+      availabilityText,
+      timelineNowText,
+      footerPitch,
+      footerLocation,
+      techCategoryOrder
     }`;
     const data = await client.fetch<Profile>(query);
     return data || MOCK_PROFILE;

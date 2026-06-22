@@ -3,38 +3,42 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { AnimatedCounter } from './AnimatedCounter';
 import { GlowOrb } from './GlowOrb';
+import { Profile } from '@/lib/sanity';
 
-const CODE_LINES = [
-  { indent: 0, content: [{ type: 'keyword', text: 'const ' }, { type: 'variable', text: 'ali' }, { type: 'plain', text: ' = {' }] },
-  { indent: 1, content: [{ type: 'property', text: 'name' }, { type: 'plain', text: ': ' }, { type: 'string', text: '"Ali Abu Fadaleh"' }, { type: 'plain', text: ',' }] },
-  { indent: 1, content: [{ type: 'property', text: 'role' }, { type: 'plain', text: ': ' }, { type: 'string', text: '"Enterprise Systems Specialist"' }, { type: 'plain', text: ',' }] },
-  { indent: 1, content: [{ type: 'property', text: 'focus' }, { type: 'plain', text: ': [' }] },
-  { indent: 2, content: [{ type: 'string', text: '"Performance"' }, { type: 'plain', text: ', ' }, { type: 'string', text: '"AI Integration"' }, { type: 'plain', text: ',' }] },
-  { indent: 2, content: [{ type: 'string', text: '"3D Web"' }, { type: 'plain', text: ', ' }, { type: 'string', text: '"Clean Architecture"' }] },
-  { indent: 1, content: [{ type: 'plain', text: '],' }] },
-  { indent: 1, content: [{ type: 'property', text: 'available' }, { type: 'plain', text: ': ' }, { type: 'boolean', text: 'true' }, { type: 'plain', text: ',' }] },
-  { indent: 1, content: [{ type: 'property', text: 'location' }, { type: 'plain', text: ': ' }, { type: 'string', text: '"Available Worldwide"' }, { type: 'plain', text: ',' }] },
-  { indent: 0, content: [{ type: 'plain', text: '};' }] },
-];
-
-const TOKEN_COLORS: Record<string, string> = {
-  keyword: '#C792EA',
-  variable: '#82AAFF',
-  property: '#F78C6C',
-  string: '#C3E88D',
-  boolean: '#FF9CAC',
-  plain: '#8888AA',
-};
-
-const STATS = [
-  { target: 3, suffix: '+', label: 'Years Experience' },
-  { target: 20, suffix: '+', label: 'Projects Shipped' },
-  { target: 10, suffix: '+', label: 'Technologies' },
-  { target: 100, suffix: '+', label: 'GitHub Commits' },
-];
-
-export function AboutSection() {
+export function AboutSection({ profile }: { profile: Profile }) {
   const prefersReducedMotion = useReducedMotion();
+
+  const codeSnippet = profile.aboutCodeSnippet || {
+    name: "Placeholder",
+    role: "Role",
+    focus: [],
+    available: false,
+    location: "Location",
+  };
+
+  const CODE_LINES = [
+    { indent: 0, content: [{ type: 'keyword', text: 'const ' }, { type: 'variable', text: 'ali' }, { type: 'plain', text: ' = {' }] },
+    { indent: 1, content: [{ type: 'property', text: 'name' }, { type: 'plain', text: ': ' }, { type: 'string', text: `"${codeSnippet.name}"` }, { type: 'plain', text: ',' }] },
+    { indent: 1, content: [{ type: 'property', text: 'role' }, { type: 'plain', text: ': ' }, { type: 'string', text: `"${codeSnippet.role}"` }, { type: 'plain', text: ',' }] },
+    { indent: 1, content: [{ type: 'property', text: 'focus' }, { type: 'plain', text: ': [' }] },
+    { indent: 2, content: codeSnippet.focus?.flatMap((item, i, arr) => [
+      { type: 'string', text: `"${item}"` },
+      ...(i < arr.length - 1 ? [{ type: 'plain', text: ', ' }] : []),
+    ]) || [] },
+    { indent: 1, content: [{ type: 'plain', text: '],' }] },
+    { indent: 1, content: [{ type: 'property', text: 'available' }, { type: 'plain', text: ': ' }, { type: 'boolean', text: codeSnippet.available ? 'true' : 'false' }, { type: 'plain', text: ',' }] },
+    { indent: 1, content: [{ type: 'property', text: 'location' }, { type: 'plain', text: ': ' }, { type: 'string', text: `"${codeSnippet.location}"` }, { type: 'plain', text: ',' }] },
+    { indent: 0, content: [{ type: 'plain', text: '};' }] },
+  ];
+
+  const TOKEN_COLORS: Record<string, string> = {
+    keyword: '#C792EA',
+    variable: '#82AAFF',
+    property: '#F78C6C',
+    string: '#C3E88D',
+    boolean: '#FF9CAC',
+    plain: '#8888AA',
+  };
 
   const slideLeft = prefersReducedMotion
     ? {}
@@ -119,7 +123,7 @@ export function AboutSection() {
 
             {/* Stats grid */}
             <div className="grid grid-cols-2 gap-4 mb-8">
-              {STATS.map(({ target, suffix, label }) => (
+              {profile.aboutStats?.map(({ target, suffix, label }) => (
                 <div
                   key={label}
                   className="p-5 rounded-xl border"
@@ -151,7 +155,7 @@ export function AboutSection() {
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
               </span>
               <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                Available for new opportunities
+                {profile.availabilityText || 'Available for new opportunities'}
               </span>
             </div>
           </motion.div>

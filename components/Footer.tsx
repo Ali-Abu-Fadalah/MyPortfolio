@@ -2,14 +2,13 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import { GlowOrb } from './GlowOrb';
+import { Profile } from '@/lib/sanity';
 
 interface FooterProps {
-  email: string;
-  linkedinUrl: string;
-  copyrightName: string;
+  profile: Profile;
 }
 
-export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
+export function Footer({ profile }: FooterProps) {
   const prefersReducedMotion = useReducedMotion();
 
   const fadeUp = (delay = 0) =>
@@ -86,8 +85,7 @@ export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
           className="text-base sm:text-lg leading-relaxed mb-10 max-w-xl mx-auto"
           style={{ color: 'var(--text-secondary)' }}
         >
-          Available for full-time roles, contract work, and open-source collaborations.
-          Drop me a message or grab my resume.
+          {profile.footerPitch || 'Available for full-time roles, contract work, and open-source collaborations. Drop me a message or grab my resume.'}
         </motion.p>
 
         {/* Location */}
@@ -116,7 +114,7 @@ export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
             />
           </svg>
           <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            Available worldwide · Open to relocation
+            {profile.footerLocation || 'Available worldwide · Open to relocation'}
           </span>
         </motion.div>
 
@@ -126,7 +124,7 @@ export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
           className="flex flex-wrap items-center justify-center gap-4 mb-14"
         >
           <a
-            href={`mailto:${email}`}
+            href={`mailto:${profile.email}`}
             className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
             style={{ backgroundColor: 'var(--accent)', color: '#FFFFFF' }}
             onMouseEnter={(e) =>
@@ -148,7 +146,7 @@ export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
             Send Email
           </a>
           <a
-            href="/resume.pdf"
+            href={profile.resumeUrl || '#'}
             download
             className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold rounded-xl border transition-all duration-200 hover:scale-105"
             style={{
@@ -177,7 +175,7 @@ export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
         >
           {/* GitHub */}
           <a
-            href="https://github.com/Ali-Abu-Fadalah"
+            href={`https://github.com/${profile.githubUsername}`}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub Profile"
@@ -208,7 +206,7 @@ export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
 
           {/* LinkedIn */}
           <a
-            href={linkedinUrl}
+            href={profile.linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn Profile"
@@ -235,7 +233,7 @@ export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
 
           {/* Email */}
           <a
-            href={`mailto:${email}`}
+            href={`mailto:${profile.email}`}
             aria-label="Email"
             className="p-3 rounded-xl border transition-all duration-200 hover:scale-110"
             style={{
@@ -269,7 +267,7 @@ export function Footer({ email, linkedinUrl, copyrightName }: FooterProps) {
           className="pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
           style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}
         >
-          <p>&copy; {new Date().getFullYear()} {copyrightName}. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {profile.copyrightName}. All rights reserved.</p>
           <p style={{ fontFamily: 'var(--font-mono)' }}>
             Built with{' '}
             <span style={{ color: 'var(--accent)' }}>Next.js</span>

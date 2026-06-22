@@ -27,7 +27,7 @@ function MonogramLogo() {
   );
 }
 
-export function Navbar() {
+export function Navbar({ resumeUrl = '/resume.pdf' }: { resumeUrl?: string }) {
   const prefersReducedMotion = useReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -149,7 +149,7 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {/* Resume — desktop only */}
           <a
-            href="/resume.pdf"
+            href={resumeUrl}
             download
             className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg border transition-all duration-200 hover:scale-105"
             style={{
@@ -258,7 +258,7 @@ export function Navbar() {
               }}
             >
               <a
-                href="/resume.pdf"
+                href={resumeUrl}
                 download
                 onClick={() => setIsOpen(false)}
                 className="px-8 py-3 text-base font-semibold rounded-xl border"

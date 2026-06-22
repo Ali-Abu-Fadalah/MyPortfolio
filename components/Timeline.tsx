@@ -6,6 +6,7 @@ import { GlowOrb } from './GlowOrb';
 
 interface TimelineProps {
   experiences: Experience[];
+  nowText?: string;
 }
 
 function BriefcaseIcon() {
@@ -24,8 +25,9 @@ function GraduationIcon() {
   );
 }
 
-export function Timeline({ experiences }: TimelineProps) {
+export function Timeline({ experiences, nowText }: TimelineProps) {
   const prefersReducedMotion = useReducedMotion();
+  const safeNowText = nowText ?? '— Building & growing';
 
   const sortedExperiences = [...experiences].sort(
     (a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
@@ -219,7 +221,7 @@ export function Timeline({ experiences }: TimelineProps) {
               style={{ backgroundColor: 'var(--bg-surface-2)', borderColor: 'var(--border)' }}
             >
               <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>Now</span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>— Building &amp; growing</span>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{safeNowText}</span>
             </div>
           </div>
         </div>
