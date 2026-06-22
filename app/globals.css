@@ -2,30 +2,211 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-html {
-  scroll-behavior: smooth;
+/* ── Fonts ────────────────────────────────────────────────── */
+@theme inline {
+  --font-display: var(--font-space-grotesk);
+  --font-body:    var(--font-inter);
+  --font-mono:    var(--font-jetbrains-mono);
+  --font-sans:    var(--font-inter);
 }
 
+/* ── Design Tokens ────────────────────────────────────────── */
 :root {
-  --background: #fafafa;
-  --foreground: #09090b;
+  /* Base surfaces */
+  --bg-base:        #FAFAFE;
+  --bg-surface:     #F0F0FA;
+  --bg-surface-2:   #E8E8F5;
+  
+  /* Borders */
+  --border:         #E2E2F0;
+  --border-hover:   #C8C8E0;
+  
+  /* Typography */
+  --text-primary:   #0A0A14;
+  --text-secondary: #555570;
+  --text-muted:     #9090A8;
+  
+  /* Accent — Electric Indigo */
+  --accent:         #5B52F0;
+  --accent-glow:    rgba(91,82,240,0.2);
+  --accent-dim:     #4B44CC;
+  --accent-bright:  #7B73FF;
+  
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.10);
+  --shadow-accent: 0 0 24px rgba(91,82,240,0.25);
+  
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl:32px;
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
+  /* Base surfaces */
+  --bg-base:        #06060A;
+  --bg-surface:     #0F0F16;
+  --bg-surface-2:   #161622;
+  
+  /* Borders */
+  --border:         #1C1C28;
+  --border-hover:   #2A2A3C;
+  
+  /* Typography */
+  --text-primary:   #F2F2FF;
+  --text-secondary: #8888AA;
+  --text-muted:     #44445A;
+  
+  /* Accent */
+  --accent:         #6C63FF;
+  --accent-glow:    rgba(108,99,255,0.2);
+  --accent-dim:     #4B44CC;
+  --accent-bright:  #8A83FF;
+  
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.5);
+  --shadow-accent: 0 0 32px rgba(108,99,255,0.3);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ── Base Reset ───────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-hover) transparent;
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+@media (hover: none) {
+  body { cursor: auto; }
+}
+
+/* Custom scrollbar (webkit) */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Selection */
+::selection {
+  background: var(--accent-glow);
+  color: var(--accent-bright);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Keyframes ────────────────────────────────────────────── */
+
+/* Typewriter cursor blink */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Glow orb gentle drift */
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33%       { transform: translate(30px, -20px) scale(1.05); }
+  66%       { transform: translate(-20px, 15px) scale(0.97); }
+}
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  40%       { transform: translate(-25px, 20px) scale(1.03); }
+  70%       { transform: translate(15px, -25px) scale(0.98); }
+}
+
+/* Infinite marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Pulse for status dots */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* Scroll indicator bounce */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50%       { transform: translateY(6px); opacity: 0.5; }
+}
+
+/* Draw-on for SVG stroke (page loader) */
+@keyframes draw-stroke {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Fade-up utility */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Utility Classes ──────────────────────────────────────── */
+.font-display { font-family: var(--font-display), system-ui, sans-serif; }
+.font-mono    { font-family: var(--font-mono), monospace; }
+
+.animate-orb-1  { animation: orb-drift-1 18s ease-in-out infinite; }
+.animate-orb-2  { animation: orb-drift-2 22s ease-in-out infinite; }
+.animate-marquee { animation: marquee 25s linear infinite; }
+.animate-cursor-blink { animation: cursor-blink 1s step-end infinite; }
+.animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+.animate-scroll-bounce { animation: scroll-bounce 1.8s ease-in-out infinite; }
+
+/* Noise texture overlay (lightweight SVG data URI) */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+.dark .noise-overlay { opacity: 0.045; }
+
+/* Section gradient divider */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  width: 100%;
+}
+
+/* Glow border utility */
+.border-glow {
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-accent);
+}
+
+/* ── Reduced Motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
 }

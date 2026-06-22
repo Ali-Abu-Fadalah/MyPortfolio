@@ -1,62 +1,71 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { Navbar } from "@/components/Navbar";
+import type { Metadata } from 'next';
+import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google';
+import './globals.css';
+import { Navbar } from '@/components/Navbar';
+import { Providers } from '@/components/providers';
+import { CustomCursor } from '@/components/CustomCursor';
+import { PageLoader } from '@/components/PageLoader';
+import { ScrollProgress } from '@/components/ScrollProgress';
 
-import { Providers } from "@/components/providers";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-space-grotesk',
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-jetbrains-mono',
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500'],
 });
 
 export const metadata: Metadata = {
-  title: "Ali Abu Fadaleh | Portfolio",
-  description: "Computer Science Graduate & Enterprise Systems Specialist",
-  keywords: ["Software Engineer", "Developer Portfolio", "Next.js", "Three.js", "React Three Fiber", "Web Development", "TypeScript", "Framer Motion"],
-  authors: [{ name: "Ali Abu Fadaleh", url: "https://github.com/Ali-Abu-Fadalah" }],
+  title: 'Ali Abu Fadaleh | Portfolio',
+  description: 'Computer Science Graduate & Enterprise Systems Specialist — building high-performance web apps, AI integrations, and developer tooling.',
+  keywords: [
+    'Software Engineer', 'Developer Portfolio', 'Next.js', 'Three.js',
+    'React Three Fiber', 'Web Development', 'TypeScript', 'Framer Motion',
+    'Enterprise Systems', 'AI Integration',
+  ],
+  authors: [{ name: 'Ali Abu Fadaleh', url: 'https://github.com/Ali-Abu-Fadalah' }],
+  metadataBase: new URL('https://my-portfolio-ali-abu-fadalehs-projects.vercel.app'),
   openGraph: {
-    title: "Ali Abu Fadaleh | Portfolio",
-    description: "Computer Science Graduate & Enterprise Systems Specialist",
-    url: "https://github.com/Ali-Abu-Fadalah/MyPortfolio",
-    siteName: "Ali Abu Fadaleh Portfolio",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Ali Abu Fadaleh | Portfolio Card",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
+    title: 'Ali Abu Fadaleh | Portfolio',
+    description: 'Computer Science Graduate & Enterprise Systems Specialist.',
+    url: 'https://my-portfolio-ali-abu-fadalehs-projects.vercel.app',
+    siteName: 'Ali Abu Fadaleh Portfolio',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Ali Abu Fadaleh Portfolio' }],
+    locale: 'en_US',
+    type: 'website',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Ali Abu Fadaleh | Portfolio",
-    description: "Computer Science Graduate & Enterprise Systems Specialist",
-    images: ["/og-image.png"],
+    card: 'summary_large_image',
+    title: 'Ali Abu Fadaleh | Portfolio',
+    description: 'Computer Science Graduate & Enterprise Systems Specialist.',
+    images: ['/og-image.png'],
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
+      <body className="min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}>
         <Providers>
+          <PageLoader />
+          <ScrollProgress />
+          <CustomCursor />
           <Navbar />
           {children}
         </Providers>

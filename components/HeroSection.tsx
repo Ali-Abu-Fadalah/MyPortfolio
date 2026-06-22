@@ -1,65 +1,44 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Icosahedron, Float, Environment, ContactShadows } from '@react-three/drei';
-import { motion } from 'framer-motion';
-import { useTheme } from 'next-themes';
-import * as THREE from 'three';
+import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Profile } from '@/lib/sanity';
+import { GlowOrb } from './GlowOrb';
+import { NoiseOverlay } from './NoiseOverlay';
+import { TypewriterText } from './TypewriterText';
 
-interface AbstractShapeProps {
-  theme: string;
-  isMobile: boolean;
+// Dynamically import R3F canvas — avoids SSR, reduces initial bundle
+const ParticleCanvas = dynamic(
+  () => import('./ParticleCanvas').then((m) => m.ParticleCanvas),
+  { ssr: false, loading: () => null }
+);
+
+const ROLES = [
+  'Enterprise Systems Specialist',
+  'Full-Stack Engineer',
+  'AI Integration Builder',
+  '3D Web Developer',
+];
+
+interface StatItemProps {
+  value: string;
+  label: string;
 }
 
-function AbstractShape({ theme, isMobile }: AbstractShapeProps) {
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  // Auto rotate and track pointer using linear interpolation (lerp)
-  useFrame((state) => {
-    if (meshRef.current) {
-      // 1. Auto rotation
-      meshRef.current.rotation.y += 0.004;
-      meshRef.current.rotation.x += 0.002;
-      
-      // 2. Smoothly interpolate position based on pointer x/y to follow cursor
-      // Scale down movement range on mobile to prevent canvas edge clipping
-      const targetX = state.pointer.x * (isMobile ? 1.0 : 2.0);
-      const targetY = state.pointer.y * (isMobile ? 0.8 : 1.5);
-      
-      meshRef.current.position.x = THREE.MathUtils.lerp(
-        meshRef.current.position.x,
-        targetX,
-        0.05
-      );
-      meshRef.current.position.y = THREE.MathUtils.lerp(
-        meshRef.current.position.y,
-        targetY,
-        0.05
-      );
-    }
-  });
-
-  const isDark = theme === 'dark';
-  // Cyan in dark mode, zinc dark gray in light mode
-  const meshColor = isDark ? '#06b6d4' : '#52525b';
-  const emissiveColor = isDark ? '#06b6d4' : '#71717a';
-  const emissiveIntensity = isDark ? 0.6 : 0.25;
-
+function StatItem({ value, label }: StatItemProps) {
   return (
-    <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
-      <Icosahedron ref={meshRef} args={[1, 1]} scale={isMobile ? 1.2 : 2.5}>
-        <meshStandardMaterial 
-          color={meshColor} 
-          wireframe 
-          transparent
-          opacity={isDark ? 0.35 : 0.25}
-          emissive={emissiveColor}
-          emissiveIntensity={emissiveIntensity}
-        />
-      </Icosahedron>
-    </Float>
+    <div className="flex flex-col items-center sm:items-start gap-0.5">
+      <span
+        className="text-2xl sm:text-3xl font-bold"
+        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
+      >
+        {value}
+      </span>
+      <span className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
+        {label}
+      </span>
+    </div>
   );
 }
 
@@ -68,76 +47,219 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ profile }: HeroSectionProps) {
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
-  const activeTheme = mounted ? (resolvedTheme || 'dark') : 'dark';
+  // Helper: returns Framer Motion animate props or empty obj if reduced motion
+  const fadeUp = (delay = 0): Record<string, unknown> =>
+    prefersReducedMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 24 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay },
+        };
 
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-screen w-full bg-zinc-50 dark:bg-zinc-950 overflow-hidden pt-16 transition-colors duration-300">
-      
-      {/* 3D Canvas Background */}
-      <div className="absolute inset-0 z-0 opacity-60 dark:opacity-50">
-        <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-          <ambientLight intensity={activeTheme === 'dark' ? 0.5 : 0.8} />
-          <directionalLight position={[10, 10, 5]} intensity={activeTheme === 'dark' ? 1.0 : 1.2} />
-          <AbstractShape theme={activeTheme} isMobile={isMobile} />
-          <Environment preset="city" />
-          <ContactShadows position={[0, -3, 0]} opacity={activeTheme === 'dark' ? 0.4 : 0.2} scale={20} blur={2} far={4.5} />
-        </Canvas>
+    <section
+      id="hero"
+      className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden pt-16"
+      style={{ backgroundColor: 'var(--bg-base)' }}
+    >
+      {/* Dot-grid background */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(circle, var(--border) 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+          opacity: 0.6,
+        }}
+      />
+
+      {/* Glow orbs */}
+      <GlowOrb
+        size={isMobile ? 250 : 500}
+        color="var(--accent)"
+        blur={isMobile ? 80 : 140}
+        opacity={0.10}
+        animationClass="animate-orb-1"
+        className="top-[10%] left-[5%]"
+      />
+      <GlowOrb
+        size={isMobile ? 200 : 400}
+        color="var(--accent-dim)"
+        blur={isMobile ? 60 : 120}
+        opacity={0.08}
+        animationClass="animate-orb-2"
+        className="bottom-[15%] right-[5%]"
+      />
+
+      {/* Noise texture */}
+      <NoiseOverlay />
+
+      {/* Particle canvas — desktop only, skipped on reduced motion */}
+      {mounted && !isMobile && !prefersReducedMotion && (
+        <div className="absolute inset-0 z-[1] opacity-40" aria-hidden="true">
+          <ParticleCanvas />
+        </div>
+      )}
+
+      {/* Bottom gradient fade */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0 h-48 z-10 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, transparent, var(--bg-base))' }}
+      />
+
+      {/* Content */}
+      <div className="relative z-20 flex flex-col items-center text-center px-6 sm:px-8 max-w-4xl mx-auto w-full">
+        {/* Available badge */}
+        <motion.div {...fadeUp(0.1)} className="mb-6">
+          <span
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold border"
+            style={{
+              backgroundColor: 'var(--bg-surface)',
+              borderColor: 'var(--border-hover)',
+              color: 'var(--text-secondary)',
+            }}
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-dot" />
+            Available for work
+          </span>
+        </motion.div>
+
+        {/* Name */}
+        <motion.h1
+          {...fadeUp(0.2)}
+          className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-4"
+          style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
+        >
+          {profile.name}
+        </motion.h1>
+
+        {/* Typewriter specialty */}
+        <motion.p {...fadeUp(0.35)} className="mb-6">
+          <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-display)' }}>
+            <TypewriterText
+              texts={ROLES}
+              speed={55}
+              pauseDuration={2000}
+              className="text-lg sm:text-2xl font-medium"
+            />
+          </span>
+        </motion.p>
+
+        {/* Bio */}
+        <motion.p
+          {...fadeUp(0.45)}
+          className="text-sm sm:text-base lg:text-lg max-w-2xl leading-relaxed mb-8"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          {profile.bio}
+        </motion.p>
+
+        {/* Stats row */}
+        <motion.div
+          {...fadeUp(0.55)}
+          className="flex items-center justify-center gap-8 sm:gap-12 mb-10 py-5 px-8 rounded-2xl border"
+          style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border)' }}
+        >
+          <StatItem value="3+" label="Years exp." />
+          <div className="w-px h-8" style={{ backgroundColor: 'var(--border)' }} />
+          <StatItem value="20+" label="Projects" />
+          <div className="w-px h-8" style={{ backgroundColor: 'var(--border)' }} />
+          <StatItem value="10+" label="Technologies" />
+        </motion.div>
+
+        {/* CTAs */}
+        <motion.div
+          {...fadeUp(0.65)}
+          className="flex flex-wrap items-center justify-center gap-4"
+        >
+          <a
+            href="#projects"
+            className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+            style={{ backgroundColor: 'var(--accent)', color: '#FFFFFF' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = 'var(--shadow-accent)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            data-cursor="pointer"
+          >
+            View My Work
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </a>
+          <a
+            href="/resume.pdf"
+            download
+            className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold rounded-xl border transition-all duration-200 hover:scale-105"
+            style={{
+              borderColor: 'var(--border-hover)',
+              color: 'var(--text-primary)',
+              backgroundColor: 'var(--bg-surface)',
+            }}
+            data-cursor="pointer"
+          >
+            Download CV
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+          </a>
+        </motion.div>
       </div>
 
-      {/* Foreground Overlay for readability */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-zinc-50/20 via-zinc-50/60 to-zinc-50 dark:from-zinc-950/20 dark:via-zinc-950/60 dark:to-zinc-950 pointer-events-none transition-colors duration-300" />
-
-      {/* Dynamic Text Overlay */}
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
-        className="relative z-20 flex flex-col items-center text-center px-4 sm:px-6 max-w-4xl mx-auto space-y-6 pointer-events-none"
+      {/* Scroll indicator */}
+      <motion.div
+        {...fadeUp(1.0)}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+        aria-hidden="true"
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-200/80 border border-zinc-300/85 text-xs sm:text-sm font-medium text-zinc-800 dark:bg-zinc-900/80 dark:border-zinc-800 dark:text-zinc-300 backdrop-blur-md shadow-md transition-colors"
+        <span
+          className="text-[10px] font-medium tracking-widest uppercase"
+          style={{ color: 'var(--text-muted)' }}
         >
-          <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-500 animate-pulse" />
-          Available for work
-        </motion.div>
-        
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-7xl bg-clip-text bg-gradient-to-b from-zinc-900 to-zinc-600 text-transparent dark:from-white dark:to-zinc-400">
-          {profile.name}
-        </h1>
-        
-        <p className="text-lg sm:text-2xl text-blue-600 dark:text-blue-400 font-medium tracking-wide">
-          {profile.specialty}
-        </p>
-
-        <p className="text-sm sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed mt-4">
-          {profile.bio}
-        </p>
-
-        <motion.a 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          href="#projects" 
-          className="mt-8 px-6 py-3 rounded-full bg-zinc-900 text-zinc-50 dark:bg-white dark:text-zinc-950 font-semibold shadow-lg hover:shadow-xl dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all pointer-events-auto"
-        >
-          View Projects
-        </motion.a>
+          Scroll
+        </span>
+        <div className="animate-scroll-bounce">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
       </motion.div>
     </section>
   );

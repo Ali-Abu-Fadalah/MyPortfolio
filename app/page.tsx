@@ -1,6 +1,7 @@
 import { getProjects, getProfile, getSkills, getExperiences } from "@/lib/sanity";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { HeroSection } from "@/components/HeroSection";
+import { AboutSection } from "@/components/AboutSection";
 import { TechStack } from "@/components/TechStack";
 import { GitHubActivity } from "@/components/GitHubActivity";
 import { Timeline } from "@/components/Timeline";
@@ -13,28 +14,21 @@ export default async function Home() {
     getProjects(),
     getProfile(),
     getSkills(),
-    getExperiences()
+    getExperiences(),
   ]);
 
   return (
-    <main className="flex min-h-screen flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 transition-colors duration-300 overflow-x-hidden">
-      {/* Dynamic Hero Section with 3D Canvas */}
+    <main
+      className="flex min-h-screen flex-col overflow-x-hidden"
+      style={{ backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}
+    >
       <HeroSection profile={profile} />
-
-      {/* Projects Grid Section */}
+      <AboutSection />
       <ProjectsSection projects={projects} />
-
-      {/* Tech Stack Skills Section */}
       <TechStack skills={skills} />
-
-      {/* GitHub Repository Feed */}
       <GitHubActivity githubUsername={profile.githubUsername} />
-
-      {/* Experience and Education Timeline */}
       <Timeline experiences={experiences} />
-
-      {/* Dynamic Action Footer */}
-      <Footer 
+      <Footer
         email={profile.email}
         linkedinUrl={profile.linkedinUrl}
         copyrightName={profile.copyrightName}
