@@ -279,49 +279,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
           {profile.bio}
         </motion.p>
 
-        {/* ── DESKTOP: Stats row pill ─────────────────── */}
-        {mounted && !isMobile && (
-          <motion.div
-            {...fadeUp(0.55)}
-            className="flex items-center justify-center gap-8 sm:gap-12 mb-10 py-5 px-8 rounded-2xl border"
-            style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border)' }}
-          >
-            {profile.heroStats?.map((stat, i) => (
-              <div key={i} className="flex items-center gap-8 sm:gap-12">
-                <StatItem value={stat.value} label={stat.label} />
-                {i < profile.heroStats.length - 1 && (
-                  <div className="w-px h-8" style={{ backgroundColor: 'var(--border)' }} />
-                )}
-              </div>
-            ))}
-          </motion.div>
-        )}
 
-        {/* ── MOBILE: Stats snap-scroll strip ─────────── */}
-        {mounted && isMobile && profile.heroStats && profile.heroStats.length > 0 && (
-          <motion.div
-            {...cardDeal(0.55)}
-            className="w-full mb-8"
-          >
-            <div className="snap-scroll-x -mx-6 px-6 pb-2 pt-2">
-              {profile.heroStats.map((stat, i) => (
-                <MobileStatCard
-                  key={i}
-                  value={stat.value}
-                  label={stat.label}
-                  delay={i * 80}
-                />
-              ))}
-            </div>
-            {/* Swipe hint label */}
-            <p
-              className="text-center mt-2 text-[10px] tracking-widest uppercase"
-              style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
-            >
-              swipe →
-            </p>
-          </motion.div>
-        )}
 
         {/* ── DESKTOP: CTA row ─────────────────────────── */}
         {mounted && !isMobile && (
@@ -405,18 +363,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
         {/* SSR placeholder (avoids layout shift before hydration) */}
         {!mounted && (
           <>
-            <div className="flex items-center justify-center gap-8 sm:gap-12 mb-10 py-5 px-8 rounded-2xl border"
-              style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
-              {profile.heroStats?.map((stat, i) => (
-                <div key={i} className="flex items-center gap-8 sm:gap-12">
-                  <StatItem value={stat.value} label={stat.label} />
-                  {i < profile.heroStats.length - 1 && (
-                    <div className="w-px h-8" style={{ backgroundColor: 'var(--border)' }} />
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
               <a href="#projects" className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold rounded-xl"
                 style={{ backgroundColor: 'var(--accent)', color: '#FFFFFF' }}>View My Work</a>
             </div>

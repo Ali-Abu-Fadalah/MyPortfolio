@@ -64,20 +64,7 @@ export const profile = defineType({
       type: 'array',
       of: [{ type: 'string' }],
     }),
-    defineField({
-      name: 'heroStats',
-      title: 'Hero Stats',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            { name: 'value', type: 'string', title: 'Value (e.g. 3+)' },
-            { name: 'label', type: 'string', title: 'Label (e.g. Years exp.)' },
-          ],
-        },
-      ],
-    }),
+
     defineField({
       name: 'aboutHeadline',
       title: 'About Section Headline',

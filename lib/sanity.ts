@@ -91,7 +91,7 @@ export interface Profile {
   copyrightName: string;
   resumeUrl: string;
   heroRoles: string[];
-  heroStats: { value: string; label: string }[];
+
   aboutCodeSnippet: {
     name: string;
     role: string;
@@ -136,11 +136,7 @@ const MOCK_PROFILE: Profile = {
     'AI Integration Builder',
     '3D Web Developer',
   ],
-  heroStats: [
-    { value: '3+', label: 'Years exp.' },
-    { value: '20+', label: 'Projects' },
-    { value: '10+', label: 'Technologies' },
-  ],
+
   aboutCodeSnippet: {
     name: 'Ali Abu Fadaleh',
     role: 'Enterprise Systems Specialist',
@@ -190,7 +186,7 @@ export async function getProfile(): Promise<Profile> {
       copyrightName,
       "resumeUrl": resumeUrl.asset->url,
       heroRoles,
-      heroStats,
+
       aboutHeadline,
       aboutCodeSnippet,
       aboutStats,
