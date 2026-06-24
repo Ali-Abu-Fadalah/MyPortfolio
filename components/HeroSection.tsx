@@ -245,12 +245,10 @@ export function HeroSection({ profile }: HeroSectionProps) {
 
         {/* Specialty Static Badge */}
         {profile.specialty && (
-          <motion.div {...getAnim(0.28)} className="mb-4">
+          <motion.div {...getAnim(0.28)} className="mb-4 px-4">
             <span
-              className="inline-block px-3 py-1.5 rounded-md text-xs font-semibold border"
+              className="inline-block text-sm sm:text-base font-semibold"
               style={{
-                backgroundColor: 'var(--bg-surface-2)',
-                borderColor: 'var(--border)',
                 color: 'var(--text-secondary)',
                 fontFamily: 'var(--font-mono)'
               }}
@@ -433,7 +431,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
           animate: { opacity: 1 },
           transition: { delay: 1.0, duration: 0.6 },
         })}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+        className="relative mt-12 mb-8 flex flex-col items-center gap-2 w-full"
         aria-hidden="true"
       >
         {/* Mobile: wave bars | Desktop: arrow */}

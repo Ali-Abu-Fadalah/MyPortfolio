@@ -10,7 +10,7 @@ const NAV_LINKS = [
   { name: 'About',      href: '#about',      icon: AboutIcon },
   { name: 'Projects',   href: '#projects',   icon: ProjectsIcon },
   { name: 'Skills',     href: '#skills',     icon: SkillsIcon },
-  { name: 'Open Source',href: '#github',     icon: OpenSourceIcon },
+  { name: 'GitHub',     href: '#github',     icon: OpenSourceIcon },
   { name: 'Experience', href: '#experience', icon: ExpIcon },
   { name: 'Contact',    href: '#contact',    icon: ContactIcon },
 ];
@@ -137,7 +137,7 @@ function MobileBottomNav({
                   <Icon active={isActive} />
                 </motion.span>
                 <span
-                  className="relative z-10 font-medium"
+                  className="relative z-10 font-medium whitespace-nowrap"
                   style={{
                     fontSize: '9px',
                     letterSpacing: '0.04em',
