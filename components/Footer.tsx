@@ -349,11 +349,11 @@ export function Footer({ profile }: FooterProps) {
 
         {/* Bottom bar */}
         <div
-          className="pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
+          className="pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-center"
           style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}
         >
-          <p>&copy; {new Date().getFullYear()} {profile.copyrightName}. All rights reserved.</p>
-          <p style={{ fontFamily: 'var(--font-mono)' }}>
+          <p className="w-full sm:w-auto">&copy; {new Date().getFullYear()} {profile.copyrightName}. All rights reserved.</p>
+          <p className="w-full sm:w-auto" style={{ fontFamily: 'var(--font-mono)' }}>
             Built with{' '}
             <span style={{ color: 'var(--accent)' }}>Next.js</span>
             {' '}+{' '}

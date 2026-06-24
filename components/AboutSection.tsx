@@ -108,8 +108,8 @@ export function AboutSection({ profile }: { profile: Profile }) {
       </div>
 
       {/* Code lines */}
-      <div className="p-5 overflow-x-auto">
-        <pre className="text-sm leading-7" style={{ fontFamily: 'var(--font-mono)' }}>
+      <div className="p-5 overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <pre className="text-sm leading-7" style={{ fontFamily: 'var(--font-mono)', minWidth: 'max-content' }}>
           {/* Always show first line */}
           {CODE_LINES.slice(0, 1).map((line, li) => (
             <div key={li}>
@@ -190,7 +190,7 @@ export function AboutSection({ profile }: { profile: Profile }) {
   return (
     <section
       id="about"
-      className="relative py-20 md:py-28 px-6 sm:px-8 overflow-hidden"
+      className="relative py-20 md:py-28 px-6 sm:px-8 overflow-x-clip overflow-y-visible"
       style={{ backgroundColor: 'var(--bg-base)' }}
     >
       <div className="section-divider absolute top-0 left-0 right-0" />
@@ -241,6 +241,7 @@ export function AboutSection({ profile }: { profile: Profile }) {
                   onClick={() => setActiveTab(tab)}
                   className="relative flex-1 py-2.5 text-sm font-semibold rounded-lg transition-colors duration-200 capitalize"
                   style={{ color: activeTab === tab ? 'var(--text-primary)' : 'var(--text-muted)' }}
+                  data-cursor="pointer"
                 >
                   {activeTab === tab && (
                     <motion.span

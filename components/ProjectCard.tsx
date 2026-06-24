@@ -25,6 +25,13 @@ interface ProjectCardProps {
   mobileIndex?: number;
 }
 
+/* Opens a URL safely in a new tab — works on both mobile and desktop */
+function openLink(url: string, e: React.MouseEvent) {
+  e.stopPropagation();
+  e.preventDefault();
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
 export function ProjectCard({ project, mobileIndex = 0 }: ProjectCardProps) {
   const prefersReducedMotion = useReducedMotion();
   const { isMobile, mounted } = useMobileDetect();
@@ -37,18 +44,16 @@ export function ProjectCard({ project, mobileIndex = 0 }: ProjectCardProps) {
   const mobileCardVariants = {
     hidden: {
       opacity: 0,
-      y: mobileIndex % 2 === 0 ? 40 : -20,
-      rotateX: prefersReducedMotion ? 0 : 15,
+      y: mobileIndex % 2 === 0 ? 36 : -16,
       scale: 0.97,
     },
     visible: {
       opacity: 1,
       y: 0,
-      rotateX: 0,
       scale: 1,
       transition: {
         type: 'spring' as const,
-        stiffness: 110,
+        stiffness: 120,
         damping: 18,
         delay: mobileIndex * 0.06,
       },
@@ -71,15 +76,12 @@ export function ProjectCard({ project, mobileIndex = 0 }: ProjectCardProps) {
     <motion.div
       variants={mounted && isMobile ? mobileCardVariants : desktopCardVariants}
       whileHover={(!mounted || !isMobile) && !prefersReducedMotion ? { y: -6, scale: 1.01 } : {}}
-      whileTap={(mounted && isMobile) && !prefersReducedMotion ? { scale: 0.98 } : {}}
       transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border cursor-default"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border cursor-pointer"
       style={{
         backgroundColor: 'var(--bg-surface)',
         borderColor: 'var(--border)',
         transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
-        // Story-card taller header on mobile
-        minHeight: mounted && isMobile ? '0' : '0',
       }}
       onMouseEnter={(e) => {
         if (mounted && isMobile) return;
@@ -112,7 +114,7 @@ export function ProjectCard({ project, mobileIndex = 0 }: ProjectCardProps) {
         >
           {initial}
         </span>
-        <div className="absolute top-3 left-3">
+        <div className="absolute top-3 left-3 pointer-events-none">
           <span
             className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border"
             style={{
@@ -162,21 +164,40 @@ export function ProjectCard({ project, mobileIndex = 0 }: ProjectCardProps) {
           </div>
         )}
 
-        {/* Links */}
+        {/* ── Links — isolated from outer motion.div gesture capture ── */}
         <div
-          className="flex items-center gap-4 pt-4 mt-auto border-t"
+          className="flex items-center gap-4 pt-4 mt-auto border-t relative z-10"
           style={{ borderColor: 'var(--border)' }}
+          /* Stop the card's motion gesture from intercepting link taps */
+          onClick={(e) => e.stopPropagation()}
         >
           {project.githubUrl && (
-            <a
+            <motion.a
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200 hover:text-[color:var(--accent)]"
-              style={{ color: 'var(--text-secondary)' }}
+              className="flex items-center gap-1.5 text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors duration-200"
+              style={{
+                color: 'var(--text-secondary)',
+                backgroundColor: 'var(--bg-surface-2)',
+                border: '1px solid var(--border)',
+              }}
               data-cursor="pointer"
+              whileHover={!prefersReducedMotion ? { scale: 1.05 } : {}}
+              whileTap={!prefersReducedMotion ? { scale: 0.95 } : {}}
+              onClick={(e) => openLink(project.githubUrl!, e)}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.color = 'var(--accent)';
+                el.style.borderColor = 'var(--accent)';
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.color = 'var(--text-secondary)';
+                el.style.borderColor = 'var(--border)';
+              }}
             >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   fillRule="evenodd"
                   clipRule="evenodd"
@@ -184,23 +205,40 @@ export function ProjectCard({ project, mobileIndex = 0 }: ProjectCardProps) {
                 />
               </svg>
               GitHub
-            </a>
+            </motion.a>
           )}
           {project.videoUrl && (
-            <a
+            <motion.a
               href={project.videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200 hover:text-[color:var(--accent)]"
-              style={{ color: 'var(--text-secondary)' }}
+              className="flex items-center gap-1.5 text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors duration-200"
+              style={{
+                color: 'var(--text-secondary)',
+                backgroundColor: 'var(--bg-surface-2)',
+                border: '1px solid var(--border)',
+              }}
               data-cursor="pointer"
+              whileHover={!prefersReducedMotion ? { scale: 1.05 } : {}}
+              whileTap={!prefersReducedMotion ? { scale: 0.95 } : {}}
+              onClick={(e) => openLink(project.videoUrl!, e)}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.color = 'var(--accent)';
+                el.style.borderColor = 'var(--accent)';
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.color = 'var(--text-secondary)';
+                el.style.borderColor = 'var(--border)';
+              }}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               Demo
-            </a>
+            </motion.a>
           )}
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import { Experience, Profile } from '@/lib/sanity';
 import { GlowOrb } from './GlowOrb';
 import { useMobileDetect } from '@/hooks/useMobileDetect';
@@ -36,6 +37,7 @@ function MobileTimelineCard({
   index: number;
   prefersReducedMotion: boolean | null;
 }) {
+  const [expanded, setExpanded] = useState(false);
   const isWork = exp.type === 'Work';
   const nodeColor = isWork ? '#6C63FF' : '#8B5CF6';
   const isLeft = index % 2 === 0;
@@ -43,17 +45,16 @@ function MobileTimelineCard({
   return (
     <motion.div
       key={exp._id}
-      initial={prefersReducedMotion ? {} : { opacity: 0, rotateY: isLeft ? -90 : 90, x: isLeft ? -20 : 20 }}
-      whileInView={{ opacity: 1, rotateY: 0, x: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
+      initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '20px' }}
       transition={{
         type: 'spring',
-        stiffness: 80,
-        damping: 16,
-        delay: index * 0.08,
+        stiffness: 90,
+        damping: 18,
+        delay: index * 0.04,
       }}
-      className="relative flex items-start"
-      style={{ perspective: '800px' }}
+      className="relative flex items-start w-full"
     >
       {/* Center node */}
       <div className="absolute left-1/2 top-4 -translate-x-1/2 z-10">
@@ -74,7 +75,7 @@ function MobileTimelineCard({
         className={`w-[calc(50%-28px)] ${isLeft ? 'mr-auto pr-3' : 'ml-auto pl-3'}`}
       >
         <div
-          className="p-4 rounded-xl border"
+          className="p-4 rounded-xl border flex flex-col"
           style={{
             backgroundColor: 'var(--bg-surface-2)',
             borderColor: 'var(--border)',
@@ -84,7 +85,7 @@ function MobileTimelineCard({
         >
           {/* Date at top on mobile */}
           <span
-            className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-md border mb-2"
+            className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-md border mb-2 self-start"
             style={{
               color: 'var(--text-muted)',
               borderColor: 'var(--border)',
@@ -104,13 +105,25 @@ function MobileTimelineCard({
           <p className="text-xs mb-2" style={{ color: 'var(--text-secondary)' }}>
             {exp.organization}
           </p>
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+
+          <div
+            className={`text-xs leading-relaxed relative ${expanded ? '' : 'line-clamp-2'}`}
+            style={{ color: 'var(--text-muted)' }}
+          >
             {exp.description}
-          </p>
+          </div>
+          
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-[10px] font-semibold mt-1 self-start flex items-center gap-1"
+            style={{ color: nodeColor, fontFamily: 'var(--font-mono)' }}
+          >
+            {expanded ? 'Less ▴' : 'More ▾'}
+          </button>
 
           {/* Type badge */}
           <span
-            className="inline-block mt-2 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border"
+            className="inline-block mt-3 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border self-start"
             style={{
               color: nodeColor,
               borderColor: `${nodeColor}40`,
@@ -246,22 +259,20 @@ export function Timeline({ experiences, profile }: TimelineProps) {
               ))}
 
               {/* NOW indicator */}
-              <div className="relative flex items-center justify-center mt-2">
+              <div className="flex flex-col items-center mt-6">
+                <div className="w-[2px] h-6 mb-3" style={{ backgroundColor: 'var(--border-hover)' }} />
                 <div
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full border-2 flex items-center justify-center z-10"
-                  style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--accent)' }}
+                  className="py-2.5 px-4 rounded-full border inline-flex items-center gap-3 relative z-10"
+                  style={{ backgroundColor: 'var(--bg-surface-2)', borderColor: 'var(--accent)' }}
                 >
-                  <span className="relative flex h-2.5 w-2.5">
+                  <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
                     <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-pulse bg-emerald-500" />
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                   </span>
-                </div>
-                <div
-                  className="py-2.5 px-5 rounded-xl border inline-flex items-center gap-2"
-                  style={{ backgroundColor: 'var(--bg-surface-2)', borderColor: 'var(--border)' }}
-                >
-                  <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>Now</span>
-                  <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{safeNowText}</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Now</span>
+                    <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{safeNowText}</span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -243,8 +243,25 @@ export function HeroSection({ profile }: HeroSectionProps) {
           {profile.name}
         </motion.h1>
 
+        {/* Specialty Static Badge */}
+        {profile.specialty && (
+          <motion.div {...getAnim(0.28)} className="mb-4">
+            <span
+              className="inline-block px-3 py-1.5 rounded-md text-xs font-semibold border"
+              style={{
+                backgroundColor: 'var(--bg-surface-2)',
+                borderColor: 'var(--border)',
+                color: 'var(--text-secondary)',
+                fontFamily: 'var(--font-mono)'
+              }}
+            >
+              {profile.specialty}
+            </span>
+          </motion.div>
+        )}
+
         {/* Typewriter specialty */}
-        <motion.p {...getAnim(0.35)} className="mb-6">
+        <motion.p {...getAnim(0.35)} className="mb-6 overflow-hidden whitespace-nowrap min-h-[2.5rem] w-full flex items-center justify-center bg-transparent">
           <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-display)' }}>
             <TypewriterText
               texts={profile.heroRoles && profile.heroRoles.length > 0 ? profile.heroRoles : ['Developer']}
@@ -288,7 +305,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
             {...cardDeal(0.55)}
             className="w-full mb-8"
           >
-            <div className="snap-scroll-x px-1 py-2">
+            <div className="snap-scroll-x -mx-6 px-6 pb-2 pt-2">
               {profile.heroStats.map((stat, i) => (
                 <MobileStatCard
                   key={i}

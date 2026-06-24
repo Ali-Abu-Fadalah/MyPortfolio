@@ -10,13 +10,21 @@ const NAV_LINKS = [
   { name: 'About',      href: '#about',      icon: AboutIcon },
   { name: 'Projects',   href: '#projects',   icon: ProjectsIcon },
   { name: 'Skills',     href: '#skills',     icon: SkillsIcon },
+  { name: 'Open Source',href: '#github',     icon: OpenSourceIcon },
   { name: 'Experience', href: '#experience', icon: ExpIcon },
   { name: 'Contact',    href: '#contact',    icon: ContactIcon },
 ];
 
-const SECTION_IDS = ['about', 'projects', 'skills', 'experience', 'contact'];
+const SECTION_IDS = ['about', 'projects', 'skills', 'github', 'experience', 'contact'];
 
 /* ── SVG icons for the bottom nav ──────────────────── */
+function OpenSourceIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={active ? 2.2 : 1.7}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+    </svg>
+  );
+}
 function AboutIcon({ active }: { active: boolean }) {
   return (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={active ? 2.2 : 1.7}>
@@ -105,6 +113,7 @@ function MobileBottomNav({
                 className="relative flex flex-col items-center justify-center flex-1 py-3 gap-0.5 transition-colors duration-200"
                 style={{ color: isActive ? 'var(--accent)' : 'var(--text-muted)' }}
                 aria-label={link.name}
+                data-cursor="pointer"
               >
                 {/* Active pill indicator sliding beneath */}
                 {isActive && (

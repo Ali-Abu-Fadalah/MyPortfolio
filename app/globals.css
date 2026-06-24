@@ -193,7 +193,7 @@ body {
 
 .animate-orb-1  { animation: orb-drift-1 18s ease-in-out infinite; }
 .animate-orb-2  { animation: orb-drift-2 22s ease-in-out infinite; }
-.animate-marquee { animation: marquee 25s linear infinite; }
+.animate-marquee { animation: marquee 10s linear infinite; }
 .animate-cursor-blink { animation: cursor-blink 1s step-end infinite; }
 .animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
 .animate-scroll-bounce { animation: scroll-bounce 1.8s ease-in-out infinite; }
