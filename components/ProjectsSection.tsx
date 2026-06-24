@@ -6,6 +6,7 @@ import { ProjectCard } from './ProjectCard';
 import { CategoryFilter } from './CategoryFilter';
 import { GlowOrb } from './GlowOrb';
 import { PortfolioProject } from '@/lib/sanity';
+import { useMobileDetect } from '@/hooks/useMobileDetect';
 
 interface ProjectsSectionProps {
   projects: PortfolioProject[];
@@ -13,6 +14,7 @@ interface ProjectsSectionProps {
 
 export function ProjectsSection({ projects }: ProjectsSectionProps) {
   const prefersReducedMotion = useReducedMotion();
+  const { isMobile, mounted } = useMobileDetect();
   const [activeCategory, setActiveCategory] = useState('All');
 
   const categories = useMemo(
@@ -24,11 +26,6 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
     () => (activeCategory === 'All' ? projects : projects.filter((p) => p.category === activeCategory)),
     [projects, activeCategory]
   );
-
-  const containerVariants = {
-    hidden: {},
-    visible: { transition: { staggerChildren: 0.1 } },
-  };
 
   const fadeInUp = prefersReducedMotion
     ? {}
@@ -89,8 +86,36 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
           A showcase of developer tools, applications, and systems engineered for performance and reliability.
         </motion.p>
 
-        {/* Filter tabs — only if 2+ categories */}
-        {categories.length > 1 && (
+        {/* ── MOBILE: Horizontal snap-scroll category filter ── */}
+        {mounted && isMobile && categories.length > 1 && (
+          <motion.div
+            {...{ ...fadeInUp, transition: { duration: 0.5, delay: 0.15 } }}
+            className="snap-scroll-x -mx-6 px-6 pb-3 mb-8 gap-2"
+          >
+            {['All', ...categories].map((cat) => {
+              const isActive = activeCategory === cat;
+              return (
+                <motion.button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className="snap-item flex-shrink-0 px-4 py-2 rounded-full border text-xs font-semibold mr-2 transition-colors duration-200"
+                  style={{
+                    backgroundColor: isActive ? 'var(--accent)' : 'var(--bg-surface)',
+                    borderColor: isActive ? 'var(--accent)' : 'var(--border-hover)',
+                    color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
+                    fontFamily: 'var(--font-mono)',
+                  }}
+                  whileTap={prefersReducedMotion ? {} : { scale: 0.92 }}
+                >
+                  {cat}
+                </motion.button>
+              );
+            })}
+          </motion.div>
+        )}
+
+        {/* ── DESKTOP: Original category filter tabs ─────── */}
+        {(!mounted || !isMobile) && categories.length > 1 && (
           <motion.div
             {...{ ...fadeInUp, transition: { duration: 0.5, delay: 0.15 } }}
             className="mb-10"
@@ -107,14 +132,25 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeCategory}
-            variants={containerVariants}
             initial="hidden"
             animate="visible"
             exit={{ opacity: 0, transition: { duration: 0.2 } }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.1 } },
+            }}
+            className={
+              mounted && isMobile
+                ? 'flex flex-col gap-5'
+                : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
+            }
           >
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project._id} project={project} />
+            {filteredProjects.map((project, index) => (
+              <ProjectCard
+                key={project._id}
+                project={project}
+                mobileIndex={index}
+              />
             ))}
           </motion.div>
         </AnimatePresence>

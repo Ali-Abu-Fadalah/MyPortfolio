@@ -2,15 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import { PortfolioProject } from '@/lib/sanity';
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-  },
-};
+import { useMobileDetect } from '@/hooks/useMobileDetect';
 
 const CATEGORY_GRADIENTS: Record<string, string> = {
   'Developer Tools': 'linear-gradient(135deg, rgba(108,99,255,0.13), rgba(108,99,255,0.27))',
@@ -30,44 +22,93 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 interface ProjectCardProps {
   project: PortfolioProject;
+  mobileIndex?: number;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, mobileIndex = 0 }: ProjectCardProps) {
   const prefersReducedMotion = useReducedMotion();
+  const { isMobile, mounted } = useMobileDetect();
+
   const gradient = CATEGORY_GRADIENTS[project.category] ?? CATEGORY_GRADIENTS['default'];
   const accentColor = CATEGORY_COLORS[project.category] ?? CATEGORY_COLORS['default'];
   const initial = (project.category?.charAt(0) ?? 'P').toUpperCase();
 
+  // Alternating entrance: odd cards from bottom (+40), even from slightly above (-20)
+  const mobileCardVariants = {
+    hidden: {
+      opacity: 0,
+      y: mobileIndex % 2 === 0 ? 40 : -20,
+      rotateX: prefersReducedMotion ? 0 : 15,
+      scale: 0.97,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      scale: 1,
+      transition: {
+        type: 'spring' as const,
+        stiffness: 110,
+        damping: 18,
+        delay: mobileIndex * 0.06,
+      },
+    },
+  };
+
+  const desktopCardVariants = {
+    hidden: { opacity: 0, y: 28 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.55,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      },
+    },
+  };
+
   return (
     <motion.div
-      variants={cardVariants}
-      whileHover={prefersReducedMotion ? {} : { y: -6, scale: 1.01 }}
+      variants={mounted && isMobile ? mobileCardVariants : desktopCardVariants}
+      whileHover={(!mounted || !isMobile) && !prefersReducedMotion ? { y: -6, scale: 1.01 } : {}}
+      whileTap={(mounted && isMobile) && !prefersReducedMotion ? { scale: 0.98 } : {}}
       transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-      className="group relative flex flex-col h-full overflow-hidden rounded-2xl border cursor-default"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border cursor-default"
       style={{
         backgroundColor: 'var(--bg-surface)',
         borderColor: 'var(--border)',
         transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
+        // Story-card taller header on mobile
+        minHeight: mounted && isMobile ? '0' : '0',
       }}
       onMouseEnter={(e) => {
+        if (mounted && isMobile) return;
         const el = e.currentTarget as HTMLElement;
         el.style.borderColor = 'var(--accent)';
         el.style.boxShadow = '0 8px 32px rgba(108,99,255,0.15)';
       }}
       onMouseLeave={(e) => {
+        if (mounted && isMobile) return;
         const el = e.currentTarget as HTMLElement;
         el.style.borderColor = 'var(--border)';
         el.style.boxShadow = 'none';
       }}
     >
-      {/* Gradient header */}
+      {/* Gradient header — taller on mobile */}
       <div
-        className="w-full h-40 flex items-center justify-center relative overflow-hidden flex-shrink-0"
-        style={{ background: gradient }}
+        className="w-full flex items-center justify-center relative overflow-hidden flex-shrink-0 shimmer-hint"
+        style={{
+          background: gradient,
+          height: mounted && isMobile ? '200px' : '160px',
+        }}
       >
         <span
-          className="text-6xl font-black select-none opacity-20"
-          style={{ color: accentColor, fontFamily: 'var(--font-display)' }}
+          className="font-black select-none opacity-20"
+          style={{
+            color: accentColor,
+            fontFamily: 'var(--font-display)',
+            fontSize: mounted && isMobile ? '100px' : '96px',
+          }}
         >
           {initial}
         </span>
@@ -155,18 +196,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
               data-cursor="pointer"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               Demo
             </a>

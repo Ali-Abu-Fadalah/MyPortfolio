@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { Experience, Profile } from '@/lib/sanity';
 import { GlowOrb } from './GlowOrb';
+import { useMobileDetect } from '@/hooks/useMobileDetect';
 
 interface TimelineProps {
   experiences: Experience[];
@@ -25,8 +26,108 @@ function GraduationIcon() {
   );
 }
 
+/* ── Mobile alternating timeline card ──────────────────── */
+function MobileTimelineCard({
+  exp,
+  index,
+  prefersReducedMotion,
+}: {
+  exp: Experience;
+  index: number;
+  prefersReducedMotion: boolean | null;
+}) {
+  const isWork = exp.type === 'Work';
+  const nodeColor = isWork ? '#6C63FF' : '#8B5CF6';
+  const isLeft = index % 2 === 0;
+
+  return (
+    <motion.div
+      key={exp._id}
+      initial={prefersReducedMotion ? {} : { opacity: 0, rotateY: isLeft ? -90 : 90, x: isLeft ? -20 : 20 }}
+      whileInView={{ opacity: 1, rotateY: 0, x: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{
+        type: 'spring',
+        stiffness: 80,
+        damping: 16,
+        delay: index * 0.08,
+      }}
+      className="relative flex items-start"
+      style={{ perspective: '800px' }}
+    >
+      {/* Center node */}
+      <div className="absolute left-1/2 top-4 -translate-x-1/2 z-10">
+        <div
+          className="w-9 h-9 rounded-full border-2 flex items-center justify-center"
+          style={{
+            backgroundColor: 'var(--bg-surface)',
+            borderColor: nodeColor,
+            color: nodeColor,
+          }}
+        >
+          {isWork ? <BriefcaseIcon /> : <GraduationIcon />}
+        </div>
+      </div>
+
+      {/* Card — alternates left / right */}
+      <div
+        className={`w-[calc(50%-28px)] ${isLeft ? 'mr-auto pr-3' : 'ml-auto pl-3'}`}
+      >
+        <div
+          className="p-4 rounded-xl border"
+          style={{
+            backgroundColor: 'var(--bg-surface-2)',
+            borderColor: 'var(--border)',
+            borderLeft: isLeft ? `3px solid ${nodeColor}` : undefined,
+            borderRight: !isLeft ? `3px solid ${nodeColor}` : undefined,
+          }}
+        >
+          {/* Date at top on mobile */}
+          <span
+            className="inline-block text-[10px] font-medium px-2 py-0.5 rounded-md border mb-2"
+            style={{
+              color: 'var(--text-muted)',
+              borderColor: 'var(--border)',
+              backgroundColor: 'var(--bg-surface)',
+              fontFamily: 'var(--font-mono)',
+            }}
+          >
+            {exp.dateRange}
+          </span>
+
+          <h3
+            className="text-sm font-bold leading-tight mb-0.5"
+            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
+          >
+            {exp.role}
+          </h3>
+          <p className="text-xs mb-2" style={{ color: 'var(--text-secondary)' }}>
+            {exp.organization}
+          </p>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+            {exp.description}
+          </p>
+
+          {/* Type badge */}
+          <span
+            className="inline-block mt-2 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border"
+            style={{
+              color: nodeColor,
+              borderColor: `${nodeColor}40`,
+              backgroundColor: `${nodeColor}12`,
+            }}
+          >
+            {exp.type}
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export function Timeline({ experiences, profile }: TimelineProps) {
   const prefersReducedMotion = useReducedMotion();
+  const { isMobile, mounted } = useMobileDetect();
   const safeNowText = profile.timelineNowText || '— Building & growing';
 
   const sortedExperiences = [...experiences].sort(
@@ -93,7 +194,7 @@ export function Timeline({ experiences, profile }: TimelineProps) {
           className="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-4"
           style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
         >
-          {(profile.experienceHeadline || "Professional Journey").split(/\*(.*?)\*/g).map((part, i) => 
+          {(profile.experienceHeadline || 'Professional Journey').split(/\*(.*?)\*/g).map((part, i) =>
             i % 2 === 1 ? <span key={i} style={{ color: 'var(--accent)' }}>{part}</span> : part
           )}
         </motion.h2>
@@ -107,126 +208,181 @@ export function Timeline({ experiences, profile }: TimelineProps) {
                 viewport: { once: true },
                 transition: { duration: 0.6, delay: 0.1 },
               })}
-          className="text-center mb-16 text-sm sm:text-base"
+          className="text-center mb-12 text-sm sm:text-base"
           style={{ color: 'var(--text-secondary)' }}
         >
-          {profile.experienceSubheadline || "A timeline of my professional roles, projects, and educational milestones."}
+          {profile.experienceSubheadline || 'A timeline of my professional roles, projects, and educational milestones.'}
         </motion.p>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Animated connector line */}
-          <motion.div
-            initial={prefersReducedMotion ? {} : { scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
-            className="absolute left-5 top-0 bottom-0 w-px origin-top"
-            style={{ backgroundColor: 'var(--border-hover)' }}
-          />
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            className="space-y-8"
-          >
-            {sortedExperiences.map((exp) => {
-              const isWork = exp.type === 'Work';
-              const nodeColor = isWork ? '#6C63FF' : '#8B5CF6';
-
-              return (
-                <motion.div key={exp._id} variants={itemVariants} className="relative pl-14">
-                  {/* Node icon */}
-                  <div
-                    className="absolute left-0 top-3 w-10 h-10 rounded-full border-2 flex items-center justify-center"
-                    style={{
-                      backgroundColor: 'var(--bg-surface)',
-                      borderColor: nodeColor,
-                      color: nodeColor,
-                    }}
-                  >
-                    {isWork ? <BriefcaseIcon /> : <GraduationIcon />}
-                  </div>
-
-                  {/* Card */}
-                  <div
-                    className="p-5 sm:p-6 rounded-2xl border"
-                    style={{
-                      backgroundColor: 'var(--bg-surface-2)',
-                      borderColor: 'var(--border)',
-                      borderLeft: `3px solid ${nodeColor}`,
-                    }}
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-3">
-                      <div>
-                        <h3
-                          className="text-base font-bold"
-                          style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
-                        >
-                          {exp.role}
-                        </h3>
-                        <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>
-                          {exp.organization}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <span
-                          className="text-xs font-medium px-2.5 py-1 rounded-md border"
-                          style={{
-                            color: 'var(--text-muted)',
-                            borderColor: 'var(--border)',
-                            backgroundColor: 'var(--bg-surface)',
-                            fontFamily: 'var(--font-mono)',
-                          }}
-                        >
-                          {exp.dateRange}
-                        </span>
-                        <span
-                          className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border"
-                          style={{
-                            color: nodeColor,
-                            borderColor: `${nodeColor}40`,
-                            backgroundColor: `${nodeColor}12`,
-                          }}
-                        >
-                          {exp.type}
-                        </span>
-                      </div>
-                    </div>
-                    <p
-                      className="text-sm leading-relaxed"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
-                      {exp.description}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-
-          {/* NOW indicator */}
-          <div className="relative pl-14 mt-8">
-            <div
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border-2 flex items-center justify-center"
-              style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--accent)' }}
-            >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-pulse bg-emerald-500" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-              </span>
+        {/* ════════════════════════════════════════════════
+            MOBILE LAYOUT — Center-pinned alternating cards
+            ════════════════════════════════════════════════ */}
+        {mounted && isMobile && (
+          <div className="relative">
+            {/* Center connector line with traveling glow */}
+            <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-[2px]" style={{ backgroundColor: 'var(--border-hover)' }}>
+              {!prefersReducedMotion && (
+                <div
+                  className="absolute inset-0 w-full rounded-full"
+                  style={{
+                    background: 'linear-gradient(to bottom, transparent, var(--accent), transparent)',
+                    backgroundSize: '100% 60px',
+                    animation: 'glow-travel 3s linear infinite',
+                    opacity: 0.6,
+                  }}
+                />
+              )}
             </div>
-            <div
-              className="py-3 px-5 rounded-2xl border inline-flex items-center gap-2"
-              style={{ backgroundColor: 'var(--bg-surface-2)', borderColor: 'var(--border)' }}
-            >
-              <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>Now</span>
-              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{safeNowText}</span>
+
+            {/* Alternating cards */}
+            <div className="flex flex-col gap-8">
+              {sortedExperiences.map((exp, index) => (
+                <MobileTimelineCard
+                  key={exp._id}
+                  exp={exp}
+                  index={index}
+                  prefersReducedMotion={prefersReducedMotion}
+                />
+              ))}
+
+              {/* NOW indicator */}
+              <div className="relative flex items-center justify-center mt-2">
+                <div
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full border-2 flex items-center justify-center z-10"
+                  style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--accent)' }}
+                >
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-pulse bg-emerald-500" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                  </span>
+                </div>
+                <div
+                  className="py-2.5 px-5 rounded-xl border inline-flex items-center gap-2"
+                  style={{ backgroundColor: 'var(--bg-surface-2)', borderColor: 'var(--border)' }}
+                >
+                  <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>Now</span>
+                  <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{safeNowText}</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* ════════════════════════════════════════════════
+            DESKTOP LAYOUT — Left-pinned line (unchanged)
+            ════════════════════════════════════════════════ */}
+        {(!mounted || !isMobile) && (
+          <div className="relative">
+            {/* Animated connector line */}
+            <motion.div
+              initial={prefersReducedMotion ? {} : { scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
+              className="absolute left-5 top-0 bottom-0 w-px origin-top"
+              style={{ backgroundColor: 'var(--border-hover)' }}
+            />
+
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-60px' }}
+              className="space-y-8"
+            >
+              {sortedExperiences.map((exp) => {
+                const isWork = exp.type === 'Work';
+                const nodeColor = isWork ? '#6C63FF' : '#8B5CF6';
+
+                return (
+                  <motion.div key={exp._id} variants={itemVariants} className="relative pl-14">
+                    {/* Node icon */}
+                    <div
+                      className="absolute left-0 top-3 w-10 h-10 rounded-full border-2 flex items-center justify-center"
+                      style={{
+                        backgroundColor: 'var(--bg-surface)',
+                        borderColor: nodeColor,
+                        color: nodeColor,
+                      }}
+                    >
+                      {isWork ? <BriefcaseIcon /> : <GraduationIcon />}
+                    </div>
+
+                    {/* Card */}
+                    <div
+                      className="p-5 sm:p-6 rounded-2xl border"
+                      style={{
+                        backgroundColor: 'var(--bg-surface-2)',
+                        borderColor: 'var(--border)',
+                        borderLeft: `3px solid ${nodeColor}`,
+                      }}
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-3">
+                        <div>
+                          <h3
+                            className="text-base font-bold"
+                            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
+                          >
+                            {exp.role}
+                          </h3>
+                          <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                            {exp.organization}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span
+                            className="text-xs font-medium px-2.5 py-1 rounded-md border"
+                            style={{
+                              color: 'var(--text-muted)',
+                              borderColor: 'var(--border)',
+                              backgroundColor: 'var(--bg-surface)',
+                              fontFamily: 'var(--font-mono)',
+                            }}
+                          >
+                            {exp.dateRange}
+                          </span>
+                          <span
+                            className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border"
+                            style={{
+                              color: nodeColor,
+                              borderColor: `${nodeColor}40`,
+                              backgroundColor: `${nodeColor}12`,
+                            }}
+                          >
+                            {exp.type}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                        {exp.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+
+            {/* NOW indicator */}
+            <div className="relative pl-14 mt-8">
+              <div
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border-2 flex items-center justify-center"
+                style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--accent)' }}
+              >
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-pulse bg-emerald-500" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                </span>
+              </div>
+              <div
+                className="py-3 px-5 rounded-2xl border inline-flex items-center gap-2"
+                style={{ backgroundColor: 'var(--bg-surface-2)', borderColor: 'var(--border)' }}
+              >
+                <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>Now</span>
+                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{safeNowText}</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="section-divider absolute bottom-0 left-0 right-0" />
