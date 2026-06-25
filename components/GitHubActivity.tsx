@@ -43,7 +43,7 @@ export async function GitHubActivity({ githubUsername }: { githubUsername: strin
   try {
     const response = await fetch(
       `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=3`,
-      { next: { revalidate: 3600 }, headers: { 'User-Agent': 'portfolio-2026' } }
+      { next: { revalidate: 3600 }, headers: { 'User-Agent': 'portfolio-2026', Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } }
     );
     if (response.ok) {
       const data: unknown = await response.json();

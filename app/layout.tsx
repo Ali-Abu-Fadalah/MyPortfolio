@@ -30,18 +30,18 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Ali Abu Fadaleh | Portfolio',
-  description: 'Computer Science Graduate & Enterprise Systems Specialist — building high-performance web apps, AI integrations, and developer tooling.',
+  description: 'Computer Science Engineer & Enterprise Systems Specialist — building high-performance web apps, AI integrations, and developer tooling.',
   keywords: [
     'Software Engineer', 'Developer Portfolio', 'Next.js', 'Three.js',
     'React Three Fiber', 'Web Development', 'TypeScript', 'Framer Motion',
     'Enterprise Systems', 'AI Integration',
   ],
   authors: [{ name: 'Ali Abu Fadaleh', url: 'https://github.com/Ali-Abu-Fadalah' }],
-  metadataBase: new URL('https://my-portfolio-ali-abu-fadalehs-projects.vercel.app'),
+  metadataBase: new URL('https://aliabufadaleh.me'),
   openGraph: {
     title: 'Ali Abu Fadaleh | Portfolio',
-    description: 'Computer Science Graduate & Enterprise Systems Specialist.',
-    url: 'https://my-portfolio-ali-abu-fadalehs-projects.vercel.app',
+    description: 'Computer Science Engineer & Enterprise Systems Specialist.',
+    url: 'https://aliabufadaleh.me',
     siteName: 'Ali Abu Fadaleh Portfolio',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Ali Abu Fadaleh Portfolio' }],
     locale: 'en_US',
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Ali Abu Fadaleh | Portfolio',
-    description: 'Computer Science Graduate & Enterprise Systems Specialist.',
+    description: 'Computer Science Engineer & Enterprise Systems Specialist.',
     images: ['/og-image.png'],
   },
 };

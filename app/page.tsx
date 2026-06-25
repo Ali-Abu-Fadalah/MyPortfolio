@@ -7,7 +7,7 @@ import { GitHubActivity } from "@/components/GitHubActivity";
 import { Timeline } from "@/components/Timeline";
 import { Footer } from "@/components/Footer";
 
-export const revalidate = 10;
+export const revalidate = 86400;
 
 export default async function Home() {
   const [projects, profile, skills, experiences] = await Promise.all([
