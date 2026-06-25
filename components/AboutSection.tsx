@@ -240,7 +240,6 @@ export function AboutSection({ profile }: { profile: Profile }) {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className="relative flex-1 py-2.5 text-sm font-semibold rounded-lg transition-colors duration-200 capitalize"
-                  style={{ color: activeTab === tab ? 'var(--text-primary)' : 'var(--text-muted)' }}
                   data-cursor="pointer"
                 >
                   {activeTab === tab && (
@@ -251,7 +250,15 @@ export function AboutSection({ profile }: { profile: Profile }) {
                       transition={prefersReducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
-                  <span className="relative z-10">{tab === 'about' ? '👤 About' : '💻 Code'}</span>
+                  <span 
+                    className="relative z-10 block" 
+                    style={{ 
+                      color: activeTab === tab ? 'var(--text-primary)' : 'var(--text-muted)',
+                      transform: 'translateZ(0)' 
+                    }}
+                  >
+                    {tab === 'about' ? '👤 About' : '💻 Code'}
+                  </span>
                 </button>
               ))}
             </div>

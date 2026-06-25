@@ -213,6 +213,12 @@ export function Navbar({ resumeUrl = '/resume.pdf' }: { resumeUrl?: string }) {
           {/* Logo */}
           <Link
             href="/"
+            onClick={(e) => {
+              if (window.location.pathname === '/') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
             aria-label="Home"
             className="flex items-center gap-2 group"
             data-cursor="pointer"
@@ -222,7 +228,7 @@ export function Navbar({ resumeUrl = '/resume.pdf' }: { resumeUrl?: string }) {
               className="text-sm font-semibold tracking-widest uppercase hidden sm:block"
               style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
             >
-              AAF
+              AF
             </span>
           </Link>
 
