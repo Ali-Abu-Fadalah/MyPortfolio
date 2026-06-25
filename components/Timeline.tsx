@@ -251,18 +251,8 @@ export function Timeline({ experiences, profile }: TimelineProps) {
 
             {/* Alternating cards */}
             <div className="flex flex-col gap-8">
-              {sortedExperiences.map((exp, index) => (
-                <MobileTimelineCard
-                  key={exp._id}
-                  exp={exp}
-                  index={index}
-                  prefersReducedMotion={prefersReducedMotion}
-                />
-              ))}
-
               {/* NOW indicator */}
-              <div className="flex flex-col items-center mt-6">
-                <div className="w-[2px] h-6 mb-3" style={{ backgroundColor: 'var(--border-hover)' }} />
+              <div className="flex flex-col items-center mb-0">
                 <div
                   className="py-2.5 px-4 rounded-full border inline-flex items-center gap-3 relative z-10"
                   style={{ backgroundColor: 'var(--bg-surface-2)', borderColor: 'var(--accent)' }}
@@ -276,7 +266,17 @@ export function Timeline({ experiences, profile }: TimelineProps) {
                     <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{safeNowText}</span>
                   </div>
                 </div>
+                <div className="w-[2px] h-8 mt-0" style={{ backgroundColor: 'var(--border-hover)' }} />
               </div>
+
+              {sortedExperiences.map((exp, index) => (
+                <MobileTimelineCard
+                  key={exp._id}
+                  exp={exp}
+                  index={index}
+                  prefersReducedMotion={prefersReducedMotion}
+                />
+              ))}
             </div>
           </div>
         )}
@@ -295,6 +295,26 @@ export function Timeline({ experiences, profile }: TimelineProps) {
               className="absolute left-5 top-0 bottom-0 w-px origin-top"
               style={{ backgroundColor: 'var(--border-hover)' }}
             />
+
+            {/* NOW indicator */}
+            <div className="relative pl-14 mb-8">
+              <div
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border-2 flex items-center justify-center"
+                style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--accent)' }}
+              >
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-pulse bg-emerald-500" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                </span>
+              </div>
+              <div
+                className="py-3 px-5 rounded-2xl border inline-flex items-center gap-2"
+                style={{ backgroundColor: 'var(--bg-surface-2)', borderColor: 'var(--border)' }}
+              >
+                <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>Now</span>
+                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{safeNowText}</span>
+              </div>
+            </div>
 
             <motion.div
               variants={containerVariants}
@@ -374,26 +394,6 @@ export function Timeline({ experiences, profile }: TimelineProps) {
                 );
               })}
             </motion.div>
-
-            {/* NOW indicator */}
-            <div className="relative pl-14 mt-8">
-              <div
-                className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border-2 flex items-center justify-center"
-                style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--accent)' }}
-              >
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-pulse bg-emerald-500" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-                </span>
-              </div>
-              <div
-                className="py-3 px-5 rounded-2xl border inline-flex items-center gap-2"
-                style={{ backgroundColor: 'var(--bg-surface-2)', borderColor: 'var(--border)' }}
-              >
-                <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>Now</span>
-                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{safeNowText}</span>
-              </div>
-            </div>
           </div>
         )}
       </div>
