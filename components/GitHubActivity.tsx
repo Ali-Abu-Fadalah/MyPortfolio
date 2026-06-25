@@ -3,61 +3,46 @@ import { GitHubRepoGrid, GitHubRepo } from './GitHubRepoGrid';
 const MOCK_REPOS: GitHubRepo[] = [
   {
     id: 1,
-    name: 'portfolio-2026',
-    description:
-      'High-performance portfolio built with Next.js 16, Framer Motion, Three.js, and Sanity CMS.',
-    html_url: 'https://github.com/Ali-Abu-Fadalah/MyPortfolio',
-    stargazers_count: 12,
-    forks_count: 2,
+    name: 'github-sync-pending',
+    description: 'Connect a valid GitHub username to see real repositories here.',
+    html_url: `https://github.com/Ali-Abu-Fadalah`,
+    stargazers_count: 0,
+    forks_count: 0,
     language: 'TypeScript',
     updated_at: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    name: 'ai-integration-toolkit',
-    description:
-      'A modular TypeScript toolkit for integrating LLMs (Gemini, OpenAI) into enterprise web applications.',
-    html_url: 'https://github.com/Ali-Abu-Fadalah',
-    stargazers_count: 34,
-    forks_count: 5,
-    language: 'TypeScript',
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    name: 'enterprise-dashboard',
-    description:
-      'Real-time analytics dashboard with WebSocket updates, role-based auth, and PostgreSQL backend.',
-    html_url: 'https://github.com/Ali-Abu-Fadalah',
-    stargazers_count: 28,
-    forks_count: 3,
-    language: 'TypeScript',
-    updated_at: new Date().toISOString(),
-  },
+  }
 ];
 
 export async function GitHubActivity({ githubUsername }: { githubUsername: string }) {
   let repos: GitHubRepo[] = [];
   let isLive = false;
 
+  const headers: HeadersInit = { 'User-Agent': 'portfolio-2026' };
+  if (process.env.GITHUB_TOKEN && process.env.GITHUB_TOKEN !== 'undefined') {
+    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  }
+
   try {
     const response = await fetch(
-      `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=3`,
-      { next: { revalidate: 3600 }, headers: { 'User-Agent': 'portfolio-2026', Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } }
+      `https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=10`,
+      { next: { revalidate: 3600 }, headers }
     );
     if (response.ok) {
       const data: unknown = await response.json();
       if (Array.isArray(data) && data.length > 0) {
-        repos = data as GitHubRepo[];
+        repos = data.filter(repo => !repo.fork).slice(0, 3) as GitHubRepo[];
+        if (repos.length === 0) repos = data.slice(0, 3) as GitHubRepo[]; // fallback to forks if no original repos
         isLive = true;
       } else {
         repos = MOCK_REPOS;
       }
     } else {
       repos = MOCK_REPOS;
+      console.error('GitHub API error:', await response.text());
     }
-  } catch {
+  } catch (error) {
     repos = MOCK_REPOS;
+    console.error('GitHub fetch failed:', error);
   }
 
   return (
