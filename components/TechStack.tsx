@@ -94,7 +94,7 @@ export function TechStack({ skills, profile }: TechStackProps) {
           className="text-xs font-semibold tracking-widest uppercase mb-3 text-center"
           style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
         >
-          // technical arsenal
+          {'// technical arsenal'}
         </motion.p>
 
         <motion.h2

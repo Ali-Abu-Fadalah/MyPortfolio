@@ -192,7 +192,7 @@ export function Timeline({ experiences, profile }: TimelineProps) {
           className="text-xs font-semibold tracking-widest uppercase mb-3 text-center"
           style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
         >
-          // journey
+          {'// journey'}
         </motion.p>
 
         <motion.h2

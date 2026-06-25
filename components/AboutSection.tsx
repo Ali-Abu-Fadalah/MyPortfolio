@@ -160,7 +160,7 @@ export function AboutSection({ profile }: { profile: Profile }) {
               <span className="select-none mr-6 text-xs" style={{ color: 'var(--text-muted)', minWidth: '1.5rem', display: 'inline-block', textAlign: 'right' }}>
                 …
               </span>
-              <span style={{ color: 'var(--text-muted)' }}>// tap to expand</span>
+              <span style={{ color: 'var(--text-muted)' }}>{'// tap to expand'}</span>
             </div>
           )}
         </pre>
@@ -210,7 +210,7 @@ export function AboutSection({ profile }: { profile: Profile }) {
           className="text-xs font-semibold tracking-widest uppercase mb-3"
           style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
         >
-          // about me
+          {'// about me'}
         </motion.p>
 
         {/* ════════════════════════════════════════════════

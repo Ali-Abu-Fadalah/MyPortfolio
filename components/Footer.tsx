@@ -177,7 +177,7 @@ export function Footer({ profile }: FooterProps) {
           className="text-xs font-semibold tracking-widest uppercase mb-4"
           style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
         >
-          // let&apos;s connect
+          {/* // let&apos;s connect */}
         </motion.p>
 
         {/* Main heading */}

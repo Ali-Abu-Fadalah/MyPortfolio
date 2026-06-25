@@ -116,14 +116,14 @@ export interface Profile {
 const MOCK_PROFILE: Profile = {
   _id: "mock-profile",
   name: "Ali Abu Fadaleh",
-  specialty: "Enterprise Systems Specialist",
-  bio: "Computer Science Graduate & Enterprise Systems Specialist. I build high-performance web applications, developer tooling, and interactive 3D experiences.",
-  aboutBio: "I'm a passionate Computer Science graduate exploring the bleeding edge of AI engineering. I'm constantly seeking to sharpen my skills, whether that's through building multi-agent AI pipelines or high-performance frontend systems. I obsess over the intersection of speed, intelligent design, and developer experience.",
+  specialty: "Computer Science Engineer",
+  bio: "Computer Science Engineer building scalable systems and high-performance web applications.",
+  aboutBio: "I am a Computer Science Engineer focused on building fast, scalable, and intelligent systems. I obsess over clean architecture, developer experience, and delivering robust backend operations.",
   githubUsername: "Ali-Abu-Fadalah",
   email: "ali.abufadalah@gmail.com",
   linkedinUrl: "https://linkedin.com/in/ali-abu-fadalah",
   copyrightName: "Ali Abu Fadaleh",
-  aboutHeadline: "Architecting intelligent *AI pipelines* and scalable enterprise solutions",
+  aboutHeadline: "Architecting scalable backend logic and enterprise web solutions",
   techHeadline: "Tech Stack",
   techSubheadline: "Languages, frameworks, databases, and tools I build modern software with.",
   experienceHeadline: "Professional Journey",
@@ -131,16 +131,16 @@ const MOCK_PROFILE: Profile = {
   footerHeadline: "Let's build something *great* together.",
   resumeUrl: "/resume.pdf",
   heroRoles: [
-    'Enterprise Systems Specialist',
-    'Full-Stack Engineer',
-    'AI Integration Builder',
-    '3D Web Developer',
+    'Computer Science Engineer',
+    'Operations & Logistics',
+    'Backend Systems Builder',
+    'Software Developer',
   ],
 
   aboutCodeSnippet: {
     name: 'Ali Abu Fadaleh',
-    role: 'Enterprise Systems Specialist',
-    focus: ['Performance', 'AI Integration', '3D Web', 'Clean Architecture'],
+    role: 'Computer Science Engineer',
+    focus: ['Performance', 'Systems Architecture', 'Operations', 'Clean Code'],
     available: true,
     location: 'Available Worldwide',
   },
@@ -287,38 +287,29 @@ const MOCK_EXPERIENCES: Experience[] = [
   {
     _id: 'e1',
     role: 'B.S. in Computer Science',
-    organization: 'Stanford University',
+    organization: 'University',
     type: 'Education',
     dateRange: '2019 - 2023',
-    description: 'Specialized in Artificial Intelligence and Systems Engineering. Graduated with honors.',
+    description: 'Specialized in Systems Engineering and software development.',
     _createdAt: '2023-01-01T00:00:00Z'
   },
   {
     _id: 'e2',
-    role: 'Software Engineer Intern',
-    organization: 'Google',
+    role: 'Operations/Logistics',
+    organization: 'Shipa',
     type: 'Work',
-    dateRange: 'Summer 2022',
-    description: 'Developed backend API endpoints for Google Cloud Platform, optimizing data ingestion pipelines by 15%.',
+    dateRange: 'Recent',
+    description: 'Managing complex logistics operations and ensuring streamlined processes across supply chains.',
     _createdAt: '2023-06-01T00:00:00Z'
   },
   {
     _id: 'e3',
-    role: 'Enterprise Systems Specialist',
-    organization: 'Tech Innovations Lab',
+    role: 'Computer Science Engineer',
+    organization: 'Freelance & Projects',
     type: 'Work',
-    dateRange: '2023 - 2025',
-    description: 'Engineered high-performance web applications using React, Node.js, and PostgreSQL. Spearheaded adoption of Next.js and Tailwind CSS.',
+    dateRange: 'Ongoing',
+    description: 'Engineered high-performance web applications using modern web technologies and robust backend architecture.',
     _createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    _id: 'e4',
-    role: 'Lead 3D Web Engineer',
-    organization: 'Creative Tech Solutions',
-    type: 'Work',
-    dateRange: '2025 - Present',
-    description: 'Leading the development of interactive web applications with React Three Fiber, Framer Motion, and headless content architecture.',
-    _createdAt: '2025-06-01T00:00:00Z'
   }
 ];
 

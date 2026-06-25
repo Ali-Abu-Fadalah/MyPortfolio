@@ -109,11 +109,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  cursor: none;
 }
 
-@media (hover: none) {
-  body { cursor: auto; }
+@media (pointer: fine) {
+  body { cursor: none; }
 }
 
 /* Custom scrollbar (webkit) */

@@ -75,7 +75,7 @@ export async function GitHubActivity({ githubUsername }: { githubUsername: strin
               className="text-xs font-semibold tracking-widest uppercase mb-3"
               style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
             >
-              // code activity
+              {/* // code activity */}
             </p>
             <div className="flex items-center gap-3 mb-3 flex-wrap">
               <h2

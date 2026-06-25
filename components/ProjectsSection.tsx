@@ -67,7 +67,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
           className="text-xs font-semibold tracking-widest uppercase mb-3 text-center"
           style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
         >
-          // selected work
+          {'// selected work'}
         </motion.p>
 
         <motion.h2
