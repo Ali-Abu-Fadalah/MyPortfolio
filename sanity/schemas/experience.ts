@@ -42,5 +42,11 @@ export const experience = defineType({
       type: 'text',
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: 'order',
+      title: 'Sort Order (Higher numbers appear first in the timeline)',
+      type: 'number',
+      initialValue: 0,
+    }),
   ],
 });

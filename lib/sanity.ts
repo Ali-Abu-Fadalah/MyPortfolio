@@ -280,6 +280,7 @@ export interface Experience {
   type: 'Work' | 'Education';
   dateRange: string;
   description: string;
+  order?: number;
   _createdAt: string;
 }
 
@@ -291,6 +292,7 @@ const MOCK_EXPERIENCES: Experience[] = [
     type: 'Education',
     dateRange: '2019 - 2023',
     description: 'Specialized in Systems Engineering and software development.',
+    order: 1,
     _createdAt: '2023-01-01T00:00:00Z'
   },
   {
@@ -300,6 +302,7 @@ const MOCK_EXPERIENCES: Experience[] = [
     type: 'Work',
     dateRange: 'Recent',
     description: 'Managing complex logistics operations and ensuring streamlined processes across supply chains.',
+    order: 2,
     _createdAt: '2023-06-01T00:00:00Z'
   },
   {
@@ -309,6 +312,7 @@ const MOCK_EXPERIENCES: Experience[] = [
     type: 'Work',
     dateRange: 'Ongoing',
     description: 'Engineered high-performance web applications using modern web technologies and robust backend architecture.',
+    order: 3,
     _createdAt: '2024-01-01T00:00:00Z'
   }
 ];
@@ -331,6 +335,7 @@ export async function getExperiences(): Promise<Experience[]> {
       type,
       dateRange,
       description,
+      order,
       _createdAt
     }`;
     const data = await client.fetch<Experience[]>(query);

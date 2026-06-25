@@ -156,12 +156,14 @@ export function GitHubRepoGrid({ repos }: GitHubRepoGridProps) {
                 <span>{repo.language}</span>
               </div>
             )}
-            <div className="flex items-center gap-1">
-              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-              </svg>
-              {repo.stargazers_count}
-            </div>
+            {repo.stargazers_count > 0 && (
+              <div className="flex items-center gap-1">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+                {repo.stargazers_count}
+              </div>
+            )}
             <span className="ml-auto text-[11px]">{formatDate(repo.updated_at)}</span>
           </div>
         </motion.a>

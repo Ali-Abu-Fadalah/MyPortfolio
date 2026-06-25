@@ -143,9 +143,11 @@ export function Timeline({ experiences, profile }: TimelineProps) {
   const { isMobile, mounted } = useMobileDetect();
   const safeNowText = profile.timelineNowText || '— Building & growing';
 
-  const sortedExperiences = [...experiences].sort(
-    (a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
-  );
+  const sortedExperiences = [...experiences].sort((a, b) => {
+    const orderDiff = (b.order ?? 0) - (a.order ?? 0);
+    if (orderDiff !== 0) return orderDiff;
+    return new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime();
+  });
 
   const containerVariants = {
     hidden: { opacity: 0 },
